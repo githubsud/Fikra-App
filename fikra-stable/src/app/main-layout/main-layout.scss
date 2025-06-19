@@ -1,0 +1,52 @@
+/* src/app/app.component.scss */
+
+// Use the CSS variables we defined in the global styles.scss
+:host {
+  --header-height: 64px;
+}
+
+.app-header {
+  // Use a slightly lighter shade of navy for the header to stand out
+  background-color: var(--navy-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: var(--header-height);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px; // Space between the logo and the text
+
+  span {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.fikra-logo {
+  height: 40px; // Adjust size as needed
+}
+
+.sjc-logo {
+  height: 50px; // Adjust size as needed
+}
+
+// This is a flex-box trick to push the logos to opposite ends
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+// Style the main content area below the header
+.content-area {
+  padding: 20px 40px;
+}
+
+// Add a visual separator between the form and the dashboard
+.submission-section {
+  padding-bottom: 40px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); // Faint white line
+}

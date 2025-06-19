@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Fikra Application Stylesheet (Direct Import Method)
+   ========================================================================== */
+
+// 1. IMPORT A PRE-BUILT ANGULAR MATERIAL DARK THEME
+// We will override the colors below. This import provides all the structural styles.
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// 2. IMPORT YOUR CUSTOM FONTS
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Tajawal:wght@300;400;500;700&display=swap');
+
+// 3. DEFINE GLOBAL CSS VARIABLES
+// These variables will be used to enforce your custom theme.
+:root {
+  --navy-dark: #0A192F;
+  --navy-light: #112240;
+  --fikra-orange: #F39C12;
+  --text-light: #E6F1FF;
+  --text-secondary: #8892b0;
+  --mdc-protected-button-container-color: var(--fikra-orange); // Override for mat-raised-button
+  --mdc-protected-button-label-text-color: #000000; // Text on the orange button
+}
+
+// 4. APPLY YOUR CUSTOM THEME GLOBALLY
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  // Override the background and text color from the pre-built theme
+  background-color: var(--navy-dark) !important;
+  color: var(--text-light) !important;
+  font-family: 'Poppins', 'Tajawal', sans-serif; // Use your custom fonts
+}
+
+// 5. REUSABLE GLOBAL CLASS FOR HOVER EFFECTS
+.interactive-item {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.interactive-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(243, 156, 18, 0.2);
+}

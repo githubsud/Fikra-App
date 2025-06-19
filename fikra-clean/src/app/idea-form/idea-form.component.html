@@ -1,0 +1,27 @@
+<div class="form-container">
+  <h2>قدّم فكرة جديدة / Submit a New Idea</h2>
+
+  <mat-form-field appearance="fill" class="idea-textarea">
+    <mat-label>Describe your idea, or use the microphone...</mat-label>
+
+    <textarea matInput
+              rows="8"
+              [(ngModel)]="ideaText"
+              placeholder="e.g., 'We should create a mobile app for lawyers to track case status.'"></textarea>
+
+    <button mat-icon-button matSuffix (click)="toggleVoiceRecognition()"
+            [class.recording]="isRecording"
+            aria-label="Toggle voice recognition">
+      <mat-icon>mic</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div *ngIf="isRecording" class="listening-indicator">
+    Listening... / جارٍ الاستماع...
+  </div>
+
+  <button mat-raised-button color="accent" (click)="submit()" [disabled]="!ideaText.trim() || isSubmitting">
+    <span *ngIf="!isSubmitting">Submit & Enhance</span>
+    <span *ngIf="isSubmitting">Submitting...</span>
+  </button>
+</div>

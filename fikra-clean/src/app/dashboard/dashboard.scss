@@ -1,0 +1,58 @@
+// src/app/dashboard/dashboard.scss
+
+// Use the CSS variables from our global stylesheet
+:host {
+  display: block;
+}
+
+.dashboard-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: 500;
+  border-bottom: 1px solid var(--fikra-orange);
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.idea-card {
+  background-color: var(--navy-light);
+  color: var(--text-light);
+  margin-bottom: 25px; // Space between cards
+  border-left: 4px solid transparent; // For hover effect
+  transition: border-left 0.3s ease-in-out;
+}
+
+.idea-card:hover {
+  border-left: 4px solid var(--fikra-orange);
+}
+
+.classification-tag {
+  display: inline-block;
+  background-color: rgba(243, 156, 18, 0.15); // Transparent orange
+  color: var(--fikra-orange);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.enhanced-text {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 4px;
+  white-space: pre-wrap; // Allows text to wrap
+  word-wrap: break-word;
+  font-family: inherit; // Use the app's main font
+  color: var(--text-secondary);
+}
+
+.empty-message {
+  text-align: center;
+  font-size: 1.2em;
+  color: var(--text-secondary);
+  padding: 40px;
+}

@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Fikra Application Stylesheet
+   ========================================================================== */
+
+//
+// 1. Angular Material Theming Engine (MUST BE THE VERY FIRST RULE)
+// This @use rule must come before any other CSS rule, including @import.
+//
+@use '@angular/material' as mat;
+
+//
+// 2. Custom Google Fonts
+//
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Tajawal:wght@300;400;500;700&display=swap');
+
+//
+// 3. Include Angular Material's Core CSS
+// This includes base styles for ripples, accessibility, etc.
+//
+@include mat.core();
+
+//
+// 4. Define Custom Color Palettes for the "Fikra" Brand
+//
+$fikra-primary-palette: (
+  500: #112240, // Lighter navy for some UI elements
+  700: #0A192F, // Main navy background
+  contrast: (
+    500: #E6F1FF, // Light text on the navy background
+    700: #E6F1FF,
+  )
+);
+
+$fikra-accent-palette: (
+  500: #F39C12, // Your main Fikra Orange
+  contrast: (
+    500: #000000, // Black text on the orange buttons for readability
+  )
+);
+
+// Create the theme color configuration objects
+$fikra-primary: mat.define-palette($fikra-primary-palette, 700, 500);
+$fikra-accent: mat.define-palette($fikra-accent-palette, 500);
+$fikra-warn: mat.define-palette(mat.$red-palette); // Standard red for errors
+
+//
+// 5. Define the Complete Dark Theme
+//
+$fikra-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $fikra-primary,
+    accent: $fikra-accent,
+    warn: $fikra-warn,
+  )
+));
+
+//
+// 6. Apply the Custom Theme to All Angular Material Components
+//
+@include mat.all-component-themes($fikra-dark-theme);
+
+
+/* ==========================================================================
+   Global Styles & CSS Variables
+   ========================================================================== */
+
+//
+// 7. Define CSS Variables for Easy Reuse in Components
+//
+:root {
+  --navy-dark: #0A192F;
+  --navy-light: #112240;
+  --fikra-orange: #F39C12;
+  --text-light: #E6F1FF;
+  --text-secondary: #8892b0;
+}
+
+//
+// 8. Global HTML and Body Styles
+//
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--navy-dark);
+  color: var(--text-light);
+  font-family: 'Poppins', 'Tajawal', sans-serif; // Using your custom fonts
+}
+
+//
+// 9. Reusable Global Class for Hover Effects
+//
+.interactive-item {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.interactive-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(243, 156, 18, 0.2);
+}

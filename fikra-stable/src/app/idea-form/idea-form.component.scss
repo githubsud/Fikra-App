@@ -1,0 +1,49 @@
+// src/app/idea-form/idea-form.component.scss
+
+// Use the CSS variables defined in the global styles.scss
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 40px;
+}
+
+h2 {
+  font-size: 2em;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.idea-textarea {
+  width: 100%;
+  max-width: 700px;
+}
+
+// Style the listening indicator text
+.listening-indicator {
+  margin-top: 10px;
+  color: var(--fikra-orange); // Use our theme's orange color
+  font-style: italic;
+}
+
+// Style the microphone icon when it's recording
+.recording mat-icon {
+  color: var(--fikra-orange);
+  animation: pulse 1.5s infinite;
+}
+
+// Add a pulsing animation for the recording state
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

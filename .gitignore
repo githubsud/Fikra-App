@@ -1,0 +1,16 @@
+# Python / FastAPI
+__pycache__/
+*.pyc
+.venv/
+fikra_backend/fikra_app.db
+
+# Angular / Node
+/fikra-stable/node_modules/
+/fikra-stable/dist/
+/fikra-stable/.angular/
+npm-debug.log
+
+# IDE / OS specific
+.vscode/
+.idea/
+*.DS_Store
