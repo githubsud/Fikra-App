@@ -1,10 +1,14 @@
 // src/app/main-layout/main-layout.ts
-import { Component, ViewChild, Inject, LOCALE_ID } from '@angular/core'; // <-- Import Inject & LOCALE_ID
+import { Component, ViewChild, Inject, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar'; // <-- Use MatToolbarModule for standalone
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button'; // <-- Import Button Module
+import { RouterLink } from '@angular/router';
 
+// Import Material components
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+// Import your custom components
 import { IdeaFormComponent } from '../idea-form/idea-form.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 
@@ -13,9 +17,10 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
   standalone: true,
   imports: [
     CommonModule,
-    MatToolbarModule, // Use MatToolbarModule
+    RouterLink,
+    MatToolbarModule,
     MatIconModule,
-    MatButtonModule, // Add Button Module
+    MatButtonModule,
     IdeaFormComponent,
     DashboardComponent,
   ],
@@ -25,17 +30,17 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 export class MainLayoutComponent {
   @ViewChild(DashboardComponent) dashboard!: DashboardComponent;
 
-  // NEW PROPERTIES FOR LANGUAGE SWITCHING
+  // Properties for the language switcher
   otherLang: 'en' | 'ar';
   otherLangUrl: string;
 
+  // Inject LOCALE_ID to know the current language
   constructor(@Inject(LOCALE_ID) public activeLocale: string) {
     // Determine the other language
-    this.otherLang = this.activeLocale === 'ar' ? 'en' : 'ar';
-
-    // Build the URL for the other language
-    // In development, Angular serves languages from subdirectories
-    this.otherLangUrl = `/<span class="math-inline">\{this\.otherLang\}</span>{window.location.pathname}`;
+    this.otherLang = this.activeLocale.startsWith('ar') ? 'en' : 'ar';
+    
+    // Build the URL for the other language version of the site
+    this.otherLangUrl = `/${this.otherLang}/main`;
   }
 
   onIdeaSubmitted(): void {

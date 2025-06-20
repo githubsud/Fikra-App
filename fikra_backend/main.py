@@ -63,6 +63,28 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+# Add this new endpoint to main.py
+
+# =================================================================
+# NEW: Statistics Endpoint
+# =================================================================
+@app.get("/stats/", response_model=models.StatsResponse, tags=["Statistics"])
+def get_stats(db: Session = Depends(get_db)):
+    """
+    Retrieves aggregated statistics for dashboard charts.
+    """
+    dept_stats_raw = crud.get_idea_count_by_department(db)
+    class_stats_raw = crud.get_idea_count_by_classification(db)
+
+    # Convert the raw database results into the Pydantic StatItem model
+    dept_stats = [{"name": name, "value": value} for name, value in dept_stats_raw]
+    class_stats = [{"name": name, "value": value} for name, value in class_stats_raw]
+    
+    return {
+        "ideas_by_department": dept_stats,
+        "ideas_by_classification": class_stats,
+    }
+
 # =================================================================
 # UPDATED: Idea Endpoints
 # =================================================================

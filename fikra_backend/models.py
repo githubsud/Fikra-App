@@ -86,3 +86,14 @@ class IdeaResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class StatItem(BaseModel):
+    """Represents a single data point for a chart (e.g., a bar or a pie slice)."""
+    name: str
+    value: int
+
+class StatsResponse(BaseModel):
+    """The full JSON response for the statistics endpoint."""
+    ideas_by_department: list[StatItem]
+    ideas_by_classification: list[StatItem]

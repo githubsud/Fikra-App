@@ -1,0 +1,19 @@
+.stats-container {
+  padding: 20px 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.chart-wrapper {
+  background-color: var(--navy-light);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  max-width: 800px; // Optional: keeps charts from getting too wide
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2 {
+  text-align: center;
+}
