@@ -3,15 +3,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Idea {
+// NEW: Defines the shape of the User object inside an Idea
+export interface User {
   id: number;
   username: string;
-  department: string;
+}
+
+// UPDATED: The Idea interface now has a nested 'owner' object
+export interface Idea {
+  id: number;
   submission_date: Date;
   original_text: string;
   language: string;
   ai_classification: string;
   ai_enhanced_text: string;
+  owner: User; // <-- The user is a nested object
 }
 
 export interface IdeaCreate {

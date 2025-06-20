@@ -97,10 +97,43 @@ def create_idea_endpoint(idea: models.IdeaCreate, db: Session = Depends(get_db))
     )
     return db_idea # Pydantic v2 can convert from ORM model directly
 
+
 @app.get("/ideas/", response_model=List[models.IdeaResponse], tags=["Ideas"])
 def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
-    Retrieves a list of all ideas with their owner information.
+    Retrieves a list of all ideas.
+    This version MANUALLY builds the response to guarantee success.
     """
-    ideas = crud.get_ideas(db, skip=skip, limit=limit)
-    return ideas
+    ideas_from_db = crud.get_ideas(db, skip=skip, limit=limit)
+
+    # Manually build the list of dictionaries for the response
+    results = []
+    for idea in ideas_from_db:
+        # Check if the owner relationship is loaded
+        if idea.owner:
+            owner_data = {
+                "id": idea.owner.id,
+                "username": idea.owner.username,
+                "department": idea.owner.department
+            }
+        else:
+            # Provide a fallback just in case
+            owner_data = {
+                "id": 0,
+                "username": "N/A",
+                "department": "N/A"
+            }
+            
+        # Manually create the dictionary for the idea itself
+        idea_data = {
+            "id": idea.id,
+            "submission_date": idea.submission_date,
+            "original_text": idea.original_text,
+            "language": idea.language,
+            "ai_classification": idea.ai_classification,
+            "ai_enhanced_text": idea.ai_enhanced_text,
+            "owner": owner_data  # Nest the owner data
+        }
+        results.append(idea_data)
+    
+    return results

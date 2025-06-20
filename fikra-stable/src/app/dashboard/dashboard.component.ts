@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit {
     this.apiService.getIdeas().subscribe({
       next: (data: Idea[]) => { // <-- ADDED TYPE
         this.ideas = data;
+        // ADD THIS LINE to see the exact data structure
+        console.log('DATA RECEIVED BY DASHBOARD:', this.ideas);
       },
       error: (err: any) => { // <-- ADDED TYPE
         console.error('Failed to load ideas', err);

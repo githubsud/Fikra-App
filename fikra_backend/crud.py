@@ -1,8 +1,12 @@
-# fikra_backend/crud.py
+# fikra-backend/crud.py
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload # <-- 1. IMPORT joinedload
 import models
 import security
+
+# =================================================================
+# User CRUD Functions
+# =================================================================
 
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
@@ -19,8 +23,14 @@ def create_user(db: Session, user: models.UserCreate):
     db.refresh(db_user)
     return db_user
 
+# =================================================================
+# Idea CRUD Functions
+# =================================================================
+
 def get_ideas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Idea).order_by(models.Idea.submission_date.desc()).offset(skip).limit(limit).all()
+    """Fetches a list of ideas, eagerly loading the owner information."""
+    # 2. ADD .options(joinedload(...)) TO THE QUERY
+    return db.query(models.Idea).options(joinedload(models.Idea.owner)).order_by(models.Idea.submission_date.desc()).offset(skip).limit(limit).all()
 
 def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classification: str, enhanced_text: str):
     db_idea = models.Idea(
