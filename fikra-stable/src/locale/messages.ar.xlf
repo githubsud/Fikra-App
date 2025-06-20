@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="7626615730757719948" datatype="html">
+        <source>Previous Ideas</source>
+        <target>الأفكار السابقة</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <note priority="1" from="description">Title for the list of previously submitted ideas</note>
+      </trans-unit>
+      <trans-unit id="4656320130731332741" datatype="html">
+        <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
+        <target>المرسل </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <note priority="1" from="description">Card subtitle showing author and date</note>
+      </trans-unit>
+      <trans-unit id="7608694651216786191" datatype="html">
+        <source>Enhanced Proposal:</source>
+        <target>إقتراح تحسين الفكرة:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+        <note priority="1" from="description">Section header for the AI enhanced proposal</note>
+      </trans-unit>
+      <trans-unit id="8946289753309548697" datatype="html">
+        <source> No ideas have been submitted yet. Be the first! </source>
+        <target>لم يتم إرسال أفكار حتى الآن. كن الأول! </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="description">Message shown when there are no ideas to display</note>
+      </trans-unit>
+      <trans-unit id="2148291660187948325" datatype="html">
+        <source>Fikra Login</source>
+        <target>الدخول</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+        <note priority="1" from="description">Login page main title</note>
+      </trans-unit>
+      <trans-unit id="2241194935910215831" datatype="html">
+        <source>Please enter your credentials</source>
+        <target>الرجاء إدخال إسم المستخدم وكلمة المرور</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+        <note priority="1" from="description">Login page subtitle</note>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <target>إسم الدخول</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Form field label for username</note>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+        <target>كلمة المرور</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+        <note priority="1" from="description">Form field label for password</note>
+      </trans-unit>
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <target>دخول</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+        <note priority="1" from="description">Button text to log in</note>
+      </trans-unit>
+      <trans-unit id="8585025342188978668" datatype="html">
+        <source>Fikra</source>
+        <target>فكرة</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Application name</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,24 +1,24 @@
 <div class="login-container">
   <mat-card class="login-card">
     <mat-card-header>
-      <mat-card-title>Fikra Login</mat-card-title>
-      <mat-card-subtitle>Please enter your credentials</mat-card-subtitle>
+      <mat-card-title i18n="Login page main title">Fikra Login</mat-card-title>
+      <mat-card-subtitle i18n="Login page subtitle">Please enter your credentials</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <form class="login-form">
         <mat-form-field appearance="fill">
-          <mat-label>Username</mat-label>
+          <mat-label i18n="Form field label for username">Username</mat-label>
           <input matInput [(ngModel)]="loginData.username" name="username" required>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
+          <mat-label i18n="Form field label for password">Password</mat-label>
           <input matInput [(ngModel)]="loginData.password" type="password" name="password" required>
         </mat-form-field>
       </form>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="accent" (click)="login()">Login</button>
+      <button mat-raised-button color="accent" (click)="login()" i18n="Button text to log in">Login</button>
     </mat-card-actions>
   </mat-card>
 </div>

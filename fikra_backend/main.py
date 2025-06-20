@@ -84,8 +84,8 @@ def create_idea_endpoint(idea: models.IdeaCreate, db: Session = Depends(get_db))
     # --------------------------------------------------------------------
 
     # Call Gemini API to enhance and classify the idea
-    classification = gemini_client.classify_idea(idea.original_text)
-    enhanced_text = gemini_client.enhance_idea(idea.original_text, idea.language)
+    classification = gemini_client.classify_idea(idea.original_text, language=idea.language) # <-- Add language here
+    enhanced_text = gemini_client.enhance_idea(idea.original_text, language=idea.language)
     
     # Create the idea in the database, now linked to the owner
     db_idea = crud.create_idea(

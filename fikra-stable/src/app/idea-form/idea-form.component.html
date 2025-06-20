@@ -1,12 +1,12 @@
 <div class="form-container">
-  <h2>قدّم فكرة جديدة / Submit a New Idea</h2>
+  <h2 i18n="Title for the new idea submission form">قدّم فكرة جديدة / Submit a New Idea</h2>
 
   <mat-form-field appearance="fill" class="idea-textarea">
-    <mat-label>Describe your idea, or use the microphone...</mat-label>
-
+    <mat-label i18n="Placeholder text inside the idea text area">Describe your idea, or use the microphone...</mat-label>
     <textarea matInput
               rows="8"
               [(ngModel)]="ideaText"
+              i18n-placeholder="Example text inside the idea text area"
               placeholder="e.g., 'We should create a mobile app for lawyers to track case status.'"></textarea>
 
     <button mat-icon-button matSuffix (click)="toggleVoiceRecognition()"
@@ -16,12 +16,12 @@
     </button>
   </mat-form-field>
 
-  <div *ngIf="isRecording" class="listening-indicator">
+  <div *ngIf="isRecording" class="listening-indicator" i18n="Indicator text when microphone is on">
     Listening... / جارٍ الاستماع...
   </div>
 
   <button mat-raised-button color="accent" (click)="submit()" [disabled]="!ideaText.trim() || isSubmitting">
-    <span *ngIf="!isSubmitting">Submit & Enhance</span>
-    <span *ngIf="isSubmitting">Submitting...</span>
+    <span *ngIf="!isSubmitting" i18n="Button text to submit an idea for enhancement">Submit & Enhance</span>
+    <span *ngIf="isSubmitting" i18n="Button text while an idea is being submitted">Submitting...</span>
   </button>
 </div>

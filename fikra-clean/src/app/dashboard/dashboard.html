@@ -1,11 +1,11 @@
 <div class="dashboard-container">
-  <h2>Previous Ideas</h2>
+  <h2 i18n="Title for the list of previously submitted ideas">Previous Ideas</h2>
 
   @for (idea of ideas; track idea.id) {
     <mat-card class="idea-card interactive-item">
       <mat-card-header>
         <mat-card-title>{{ idea.original_text }}</mat-card-title>
-        <mat-card-subtitle>
+        <mat-card-subtitle i18n="Card subtitle showing author and date">
           Submitted by {{ idea.username }} on {{ idea.submission_date | date:'short' }}
         </mat-card-subtitle>
       </mat-card-header>
@@ -13,11 +13,13 @@
         <div class="classification-tag">
           {{ idea.ai_classification }}
         </div>
-        <h3>Enhanced Proposal:</h3>
+        <h3 i18n="Section header for the AI enhanced proposal">Enhanced Proposal:</h3>
         <markdown class="enhanced-text" [data]="idea.ai_enhanced_text"></markdown>
       </mat-card-content>
     </mat-card>
   } @empty {
-    <p class="empty-message">No ideas have been submitted yet. Be the first!</p>
+    <p class="empty-message" i18n="Message shown when there are no ideas to display">
+      No ideas have been submitted yet. Be the first!
+    </p>
   }
 </div>

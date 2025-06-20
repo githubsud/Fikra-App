@@ -1,50 +1,55 @@
-import os
+# fikra-backend/gemini_client.py
 import google.generativeai as genai
-from dotenv import load_dotenv
+import os
 
-load_dotenv()
-
-# --- TEMPORARY DEBUGGING LINE ---
-print(f"--- DEBUG: Attempting to use API Key: '{os.getenv('GEMINI_API_KEY')}' ---")
-# --------------------------------
-
+# Configure the API key securely
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-CLASSIFICATION_PROMPT = """
-You are an expert AI assistant for the Qatar Court of Justice. Your task is to classify an employee's idea into ONLY ONE of the following categories:
-- Process Optimization
-- Technology Adoption
-- Employee Welfare
-- Citizen & Lawyer Services
-- Security & Infrastructure
-- Legal Research & Support
 
-Analyze the following idea and return only the category name, and nothing else.
-Idea: "{idea_text}"
-"""
+def get_language_name(code: str) -> str:
+    """Converts a language code to its full name using the new logic."""
+    # Print the exact code we received from the main server file
+    print(f"--- BACKEND DEBUG: get_language_name received code: '{code}' ---")
 
-ENHANCEMENT_PROMPT = """
-You are an AI innovation consultant specializing in judicial and governmental systems. Your task is to take an employee's idea and enhance it into a structured proposal.
-The response should be in {language_name}.
-The enhanced proposal must include:
-1.  **Title:** A concise, professional title for the idea.
-2.  **Summary:** A brief one-paragraph summary.
-3.  **Key Objectives:** A bulleted list of what this idea aims to achieve.
-4.  **Proposed Implementation Steps:** A numbered list of actionable steps.
-5.  **Potential Benefits:** A bulleted list of positive outcomes.
-6.  **Potential Challenges to Consider:** A brief mention of possible hurdles.
+    # Your suggested logic
+    if code.lower().startswith('en'):
+        return 'English'
+    else:
+        return 'Arabic'
 
-Original Idea: "{idea_text}"
-"""
+def classify_idea(idea_text: str, language: str) -> str:
+    """Classifies an idea into a single category in the specified language."""
+    lang_name = get_language_name(language)
+    prompt = f"""
+    You are an AI assistant for the Qatar Court of Justice.
+    The following idea is written in either English or Arabic.
+    Your entire response MUST be in {lang_name} only.
 
-def classify_idea(idea_text: str) -> str:
-    prompt = CLASSIFICATION_PROMPT.format(idea_text=idea_text)
+    Classify the idea into ONE of the following categories:
+    - Process Optimization
+    - Technology Adoption
+    - Employee Welfare
+    - Citizen & Lawyer Services
+    - Security & Infrastructure
+    - Legal Research & Support
+
+    Idea: "{idea_text}"
+    
+    Return only the category name in {lang_name}.
+    """
     response = model.generate_content(prompt)
     return response.text.strip()
 
 def enhance_idea(idea_text: str, language: str) -> str:
-    language_name = "Arabic" if language == 'ar' else "English"
-    prompt = ENHANCEMENT_PROMPT.format(idea_text=idea_text, language_name=language_name)
+    """Enhances an idea into a structured proposal in the specified language."""
+    lang_name = get_language_name(language)
+    prompt = f"""
+    As an AI innovation consultant for the Qatar Court of Justice, enhance the following idea.
+    Your entire response MUST be in {lang_name} only, including all titles and headers.
+    Structure the response with a Title, Summary, Objectives, Steps, Benefits, and Challenges.
+
+    Original Idea: "{idea_text}"
+    """
     response = model.generate_content(prompt)
     return response.text.strip()

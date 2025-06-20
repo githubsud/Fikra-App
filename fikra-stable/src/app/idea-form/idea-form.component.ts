@@ -1,5 +1,6 @@
 // src/app/idea-form/idea-form.component.ts
-import { Component, Output, EventEmitter } from '@angular/core';
+
+import { Component, Output, EventEmitter, Inject, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -11,7 +12,7 @@ import { ApiService, IdeaCreate } from '../api.service';
 
 @Component({
   selector: 'app-idea-form',
-  standalone: true, // <-- ADDED
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -22,16 +23,20 @@ import { ApiService, IdeaCreate } from '../api.service';
     MatIcon,
     MatButton
   ],
-  templateUrl: './idea-form.component.html',
-  styleUrls: ['./idea-form.component.scss'],
+  templateUrl: './idea-form.component.html', // <-- This path is now correct
+  styleUrls: ['./idea-form.component.scss'],   // <-- This path is now correct
 })
 export class IdeaFormComponent {
   @Output() ideaSubmitted = new EventEmitter<void>();
+
   ideaText: string = '';
   isRecording: boolean = false;
   isSubmitting: boolean = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    @Inject(LOCALE_ID) public activeLocale: string
+  ) {}
 
   toggleVoiceRecognition() {
     this.isRecording = !this.isRecording;
@@ -42,10 +47,17 @@ export class IdeaFormComponent {
       return;
     }
     this.isSubmitting = true;
+
+    // Get the base language code (e.g., 'ar' from 'ar-QA')
+    const languageCode = this.activeLocale.split('-')[0];
+
+    console.log('FRONTEND is sending this language code:', languageCode);
+
     const newIdea: IdeaCreate = {
       original_text: this.ideaText,
-      language: 'en'
+      language: languageCode
     };
+
     this.apiService.submitIdea(newIdea).subscribe({
       next: (response: any) => {
         console.log('Submission successful', response);
