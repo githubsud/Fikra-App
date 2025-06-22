@@ -3,7 +3,7 @@
 
   <div class="chart-wrapper">
     <h2 i18n>Ideas by Department</h2>
-    <canvas #barChart baseChart class="chart"
+    <canvas baseChart class="chart"
       [data]="barChartData"
       [options]="barChartOptions"
       [type]="barChartType">
@@ -12,10 +12,11 @@
 
   <div class="chart-wrapper">
     <h2 i18n>Ideas by Classification</h2>
-    <canvas #pieChart baseChart class="chart"
+    <canvas baseChart class="chart"
       [data]="pieChartData"
       [options]="pieChartOptions"
-      [type]="pieChartType">
+      [type]="pieChartType"
+      [plugins]="pieChartPlugins"> <!-- This line was added -->
     </canvas>
   </div>
 

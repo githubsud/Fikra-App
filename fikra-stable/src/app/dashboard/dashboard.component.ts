@@ -7,17 +7,17 @@ import { ApiService, Idea } from '../api.service';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true, // <-- ADDED
+  standalone: true,
   imports: [
     CommonModule,
     DatePipe,
     MatCardModule,
     MarkdownModule
   ],
-  templateUrl: './dashboard.html',
+  templateUrl: './dashboard.html', // <-- Points to the correct file
   styleUrls: ['./dashboard.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit { // <-- Correct class name
   public ideas: Idea[] = [];
 
   constructor(private apiService: ApiService) { }
@@ -28,12 +28,10 @@ export class DashboardComponent implements OnInit {
 
   loadIdeas(): void {
     this.apiService.getIdeas().subscribe({
-      next: (data: Idea[]) => { // <-- ADDED TYPE
+      next: (data: Idea[]) => {
         this.ideas = data;
-        // ADD THIS LINE to see the exact data structure
-        console.log('DATA RECEIVED BY DASHBOARD:', this.ideas);
       },
-      error: (err: any) => { // <-- ADDED TYPE
+      error: (err: any) => {
         console.error('Failed to load ideas', err);
       }
     });

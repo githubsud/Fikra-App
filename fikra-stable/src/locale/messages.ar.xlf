@@ -12,8 +12,8 @@
         <note priority="1" from="description">Title for the list of previously submitted ideas</note>
       </trans-unit>
       <trans-unit id="4656320130731332741" datatype="html">
-        <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
-        <target>المرسل </target>
+        <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.owner.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
+        <target> تم الإرسال بواسطة <x id="INTERPOLATION" equiv-text="{{ idea.owner.username }}"/> في <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
           <context context-type="linenumber">9,10</context>
@@ -22,7 +22,7 @@
       </trans-unit>
       <trans-unit id="7608694651216786191" datatype="html">
         <source>Enhanced Proposal:</source>
-        <target>إقتراح تحسين الفكرة:</target>
+        <target>مقترح التحسين:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
           <context context-type="linenumber">16,17</context>
@@ -31,16 +31,70 @@
       </trans-unit>
       <trans-unit id="8946289753309548697" datatype="html">
         <source> No ideas have been submitted yet. Be the first! </source>
-        <target>لم يتم إرسال أفكار حتى الآن. كن الأول! </target>
+        <target> لم يتم تقديم أي أفكار بعد. كن الأول! </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
           <context context-type="linenumber">22,25</context>
         </context-group>
         <note priority="1" from="description">Message shown when there are no ideas to display</note>
       </trans-unit>
+      <trans-unit id="6318721872397536669" datatype="html">
+        <source>Submit a New Idea</source>
+        <target>قدّم فكرة جديدة</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+        <note priority="1" from="description">Title for the new idea submission form</note>
+      </trans-unit>
+      <trans-unit id="5355482033583845762" datatype="html">
+        <source>Describe your idea, or use the microphone...</source>
+        <target>صف فكرتك، أو استخدم الميكروفون...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+        <note priority="1" from="description">Placeholder text inside the idea text area</note>
+      </trans-unit>
+      <trans-unit id="2066209464624179204" datatype="html">
+        <source>e.g., &apos;We should create a mobile app for lawyers to track case status.&apos;</source>
+        <target>مثال: "يجب أن ننشئ تطبيقًا للهاتف المحمول للمحامين لتتبع حالة القضايا."</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">Example text inside the idea text area</note>
+      </trans-unit>
+      <trans-unit id="5416034288780005345" datatype="html">
+        <source> Listening... / جارٍ الاستماع... </source>
+        <target> جارٍ الاستماع... </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+        <note priority="1" from="description">Indicator text when microphone is on</note>
+      </trans-unit>
+      <trans-unit id="5452010049139221684" datatype="html">
+        <source>Submit &amp; Enhance</source>
+        <target>إرسال وتحسين</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+        <note priority="1" from="description">Button text to submit an idea for enhancement</note>
+      </trans-unit>
+      <trans-unit id="3493126540529865490" datatype="html">
+        <source>Submitting...</source>
+        <target>جاري الإرسال...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">Button text while an idea is being submitted</note>
+      </trans-unit>
       <trans-unit id="2148291660187948325" datatype="html">
         <source>Fikra Login</source>
-        <target>الدخول</target>
+        <target>تسجيل دخول فكرة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
           <context context-type="linenumber">4,5</context>
@@ -49,7 +103,7 @@
       </trans-unit>
       <trans-unit id="2241194935910215831" datatype="html">
         <source>Please enter your credentials</source>
-        <target>الرجاء إدخال إسم المستخدم وكلمة المرور</target>
+        <target>الرجاء إدخال بيانات الاعتماد الخاصة بك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
           <context context-type="linenumber">5,6</context>
@@ -58,7 +112,7 @@
       </trans-unit>
       <trans-unit id="5248717555542428023" datatype="html">
         <source>Username</source>
-        <target>إسم الدخول</target>
+        <target>اسم المستخدم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
           <context context-type="linenumber">10,11</context>
@@ -76,7 +130,7 @@
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
         <source>Login</source>
-        <target>دخول</target>
+        <target>تسجيل الدخول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
           <context context-type="linenumber">21,22</context>
@@ -91,6 +145,39 @@
           <context context-type="linenumber">4,6</context>
         </context-group>
         <note priority="1" from="description">Application name</note>
+      </trans-unit>
+      <trans-unit id="2301043202098268314" datatype="html">
+        <source> Statistics </source>
+        <target> الإحصائيات </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">Navigation link to statistics page</note>
+      </trans-unit>
+      <trans-unit id="2472481031154552519" datatype="html">
+        <source>Application Statistics</source>
+        <target>إحصائيات التطبيق</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7219656429785656446" datatype="html">
+        <source>Ideas by Department</source>
+        <target>الأفكار حسب الإدارة</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4394753646045895431" datatype="html">
+        <source>Ideas by Classification</source>
+        <target>الأفكار حسب التصنيف</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
       </trans-unit>
     </body>
   </file>

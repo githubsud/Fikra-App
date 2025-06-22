@@ -11,7 +11,7 @@
         <note priority="1" from="description">Title for the list of previously submitted ideas</note>
       </trans-unit>
       <trans-unit id="4656320130731332741" datatype="html">
-        <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
+        <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.owner.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
           <context context-type="linenumber">9,10</context>
@@ -33,6 +33,54 @@
           <context context-type="linenumber">22,25</context>
         </context-group>
         <note priority="1" from="description">Message shown when there are no ideas to display</note>
+      </trans-unit>
+      <trans-unit id="6318721872397536669" datatype="html">
+        <source>Submit a New Idea</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+        <note priority="1" from="description">Title for the new idea submission form</note>
+      </trans-unit>
+      <trans-unit id="5355482033583845762" datatype="html">
+        <source>Describe your idea, or use the microphone...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+        <note priority="1" from="description">Placeholder text inside the idea text area</note>
+      </trans-unit>
+      <trans-unit id="2066209464624179204" datatype="html">
+        <source>e.g., &apos;We should create a mobile app for lawyers to track case status.&apos;</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">Example text inside the idea text area</note>
+      </trans-unit>
+      <trans-unit id="5416034288780005345" datatype="html">
+        <source> Listening... / جارٍ الاستماع... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+        <note priority="1" from="description">Indicator text when microphone is on</note>
+      </trans-unit>
+      <trans-unit id="5452010049139221684" datatype="html">
+        <source>Submit &amp; Enhance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+        <note priority="1" from="description">Button text to submit an idea for enhancement</note>
+      </trans-unit>
+      <trans-unit id="3493126540529865490" datatype="html">
+        <source>Submitting...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">Button text while an idea is being submitted</note>
       </trans-unit>
       <trans-unit id="2148291660187948325" datatype="html">
         <source>Fikra Login</source>
@@ -81,6 +129,35 @@
           <context context-type="linenumber">4,6</context>
         </context-group>
         <note priority="1" from="description">Application name</note>
+      </trans-unit>
+      <trans-unit id="2301043202098268314" datatype="html">
+        <source> Statistics </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">Navigation link to statistics page</note>
+      </trans-unit>
+      <trans-unit id="2472481031154552519" datatype="html">
+        <source>Application Statistics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7219656429785656446" datatype="html">
+        <source>Ideas by Department</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4394753646045895431" datatype="html">
+        <source>Ideas by Classification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
       </trans-unit>
     </body>
   </file>
