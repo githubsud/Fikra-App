@@ -11,6 +11,11 @@
   max-width: 400px;
 }
 
+// NEW: Styles for the card header text for better contrast
+mat-card-title, mat-card-subtitle {
+  color: rgba(0, 0, 0, 0.7); // A standard dark-grey text color
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
@@ -20,4 +25,21 @@ mat-card-actions {
   display: flex;
   justify-content: flex-end;
   padding: 16px;
+}
+
+.register-link {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.9em;
+
+  a {
+    color: #555; // Darker grey for the link
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: #000; // Black on hover
+      text-decoration: underline;
+    }
+  }
 }

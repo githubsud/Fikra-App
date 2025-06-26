@@ -97,3 +97,7 @@ class StatsResponse(BaseModel):
     """The full JSON response for the statistics endpoint."""
     ideas_by_department: list[StatItem]
     ideas_by_classification: list[StatItem]
+
+class TokenData(BaseModel):
+    """The data contained within the JWT."""
+    username: str | None = None

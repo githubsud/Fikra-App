@@ -10,6 +10,9 @@
   <a mat-button class="lang-switcher" [href]="otherLangUrl">
     {{ otherLang }}
   </a>
+  <button mat-icon-button (click)="logout()" i18n-aria-label="Logout button" aria-label="Logout">
+    <mat-icon>logout</mat-icon>
+  </button>
   <img src="assets/SJC_Logo.png" alt="SJC Logo" class="sjc-logo">
 </mat-toolbar>
 

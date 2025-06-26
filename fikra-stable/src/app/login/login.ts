@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // <-- 1. IMPORT the Router
+import { Router, RouterLink } from '@angular/router'; // <-- Import RouterLink
 
-// Import Angular Material Modules for the form
+// Import Angular Material Modules
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { AuthService } from '../auth/auth.service';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink, // <-- Add RouterLink here
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -29,7 +30,6 @@ import { AuthService } from '../auth/auth.service';
 export class LoginComponent {
   public loginData = { username: '', password: '' };
 
-  // 2. INJECT the Router in the constructor
   constructor(
     private authService: AuthService,
     private router: Router
@@ -45,7 +45,6 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           console.log('Login successful!', response);
-          // 3. NAVIGATE to the main page on success
           this.router.navigate(['/main']);
         },
         error: (err) => {

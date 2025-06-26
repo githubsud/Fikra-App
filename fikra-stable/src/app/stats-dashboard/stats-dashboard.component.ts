@@ -1,6 +1,9 @@
 // src/app/stats-dashboard/stats-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router'; // <-- Import RouterLink
+import { MatIconModule } from '@angular/material/icon'; // <-- Import MatIconModule
+import { MatButtonModule } from '@angular/material/button'; // <-- Import MatButtonModule
 
 // Import the chart components and types
 import { NgChartsModule } from 'ng2-charts';
@@ -15,7 +18,10 @@ import { ApiService, StatsResponse } from '../api.service';
   standalone: true,
   imports: [
     CommonModule,
-    NgChartsModule
+    NgChartsModule,
+    RouterLink,      // <-- Add it here
+    MatIconModule,   // <-- Add it here
+    MatButtonModule  // <-- Add it here
   ],
   // THESE ARE THE CORRECTED PATHS:
   templateUrl: './stats-dashboard.component.html',

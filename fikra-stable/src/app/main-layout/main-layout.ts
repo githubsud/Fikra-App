@@ -1,20 +1,22 @@
 // src/app/main-layout/main-layout.ts
 import { Component, ViewChild, Inject, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 // Import Material components
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-// Import your custom components
+// Import your custom components and services
 import { IdeaFormComponent } from '../idea-form/idea-form.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
+  // THIS IS THE CORRECT, COMPLETE IMPORTS ARRAY:
   imports: [
     CommonModule,
     RouterLink,
@@ -22,7 +24,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
     MatIconModule,
     MatButtonModule,
     IdeaFormComponent,
-    DashboardComponent,
+    DashboardComponent
   ],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.scss']
@@ -30,21 +32,27 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 export class MainLayoutComponent {
   @ViewChild(DashboardComponent) dashboard!: DashboardComponent;
 
-  // Properties for the language switcher
   otherLang: 'en' | 'ar';
   otherLangUrl: string;
 
-  // Inject LOCALE_ID to know the current language
-  constructor(@Inject(LOCALE_ID) public activeLocale: string) {
-    // Determine the other language
+  // Inject AuthService and Router
+  constructor(
+    @Inject(LOCALE_ID) public activeLocale: string,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.otherLang = this.activeLocale.startsWith('ar') ? 'en' : 'ar';
-    
-    // Build the URL for the other language version of the site
     this.otherLangUrl = `/${this.otherLang}/main`;
   }
 
   onIdeaSubmitted(): void {
     console.log('Main layout caught the event! Refreshing dashboard...');
     this.dashboard.loadIdeas();
+  }
+
+  // Logout method
+  logout(): void {
+    this.authService.logout(); // Clears the token from storage
+    this.router.navigate(['/login']); // Redirects to the login page
   }
 }

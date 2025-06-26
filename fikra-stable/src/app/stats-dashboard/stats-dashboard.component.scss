@@ -17,3 +17,9 @@
 h1, h2 {
   text-align: center;
 }
+
+.back-button {
+  margin-bottom: 20px;
+  // Use the theme's text color for the button
+  color: var(--text-light); 
+}
