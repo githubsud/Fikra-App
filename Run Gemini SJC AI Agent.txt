@@ -1,0 +1,12 @@
+Run Gemini SJC AI Agent
+
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>set GEMINI_API_KEY=AIzaSyCrFozUJ6mDfMRvgQGbL9DQm-b5zaosjP0
+
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>uvicorn main:app --reload
+
+تشغيل النسخة العربية أولا
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>ng serve --configuration=ar
+
+تشغيل النسخة الإنجليزية أولا
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>ng serve
+
