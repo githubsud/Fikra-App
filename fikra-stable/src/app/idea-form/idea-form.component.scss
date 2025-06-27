@@ -1,9 +1,10 @@
-// Make the form container centered and give it some space
+// src/app/idea-form/idea-form.component.scss
+
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;
+  padding: 20px 40px;
 }
 
 h2 {
@@ -12,26 +13,28 @@ h2 {
   margin-bottom: 30px;
 }
 
-// Ensure the text area takes up a good amount of width
 .idea-textarea {
   width: 100%;
   max-width: 700px;
+
+  // NEW: Style for the microphone icon
+  .mat-icon {
+    color: rgba(0, 0, 0, 0.6); // Darker, more visible icon color
+    cursor: pointer;
+  }
 }
 
-// Style the listening indicator text
 .listening-indicator {
   margin-top: 10px;
-  color: var(--fikra-orange); // Use our theme's orange color
+  color: var(--fikra-orange);
   font-style: italic;
 }
 
-// Style the microphone icon when it's recording
-.recording mat-icon {
-  color: var(--fikra-orange); // Use our theme's orange color
+.recording .mat-icon {
+  color: var(--fikra-orange);
   animation: pulse 1.5s infinite;
 }
 
-// Add a pulsing animation for the recording state
 @keyframes pulse {
   0% {
     transform: scale(1);

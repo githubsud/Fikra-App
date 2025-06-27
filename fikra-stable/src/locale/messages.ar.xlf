@@ -39,7 +39,7 @@
         <note priority="1" from="description">Message shown when there are no ideas to display</note>
       </trans-unit>
       <trans-unit id="6318721872397536669" datatype="html">
-        <source>Submit a New Idea</source>
+        <source>قدّم فكرة جديدة / Submit a New Idea</source>
         <target>قدّم فكرة جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
@@ -97,36 +97,40 @@
         <target>تسجيل دخول فكرة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
-          <context context-type="linenumber">4,5</context>
+          <context context-type="linenumber">4</context>
         </context-group>
-        <note priority="1" from="description">Login page main title</note>
       </trans-unit>
       <trans-unit id="2241194935910215831" datatype="html">
         <source>Please enter your credentials</source>
         <target>الرجاء إدخال بيانات الاعتماد الخاصة بك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
-          <context context-type="linenumber">5,6</context>
+          <context context-type="linenumber">5</context>
         </context-group>
-        <note priority="1" from="description">Login page subtitle</note>
       </trans-unit>
       <trans-unit id="5248717555542428023" datatype="html">
         <source>Username</source>
         <target>اسم المستخدم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
-          <context context-type="linenumber">10,11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
-        <note priority="1" from="description">Form field label for username</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="1431416938026210429" datatype="html">
         <source>Password</source>
         <target>كلمة المرور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.html</context>
-          <context context-type="linenumber">15,16</context>
+          <context context-type="linenumber">15</context>
         </context-group>
-        <note priority="1" from="description">Form field label for password</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
         <source>Login</source>
@@ -135,7 +139,14 @@
           <context context-type="sourcefile">src/app/login/login.html</context>
           <context context-type="linenumber">21,22</context>
         </context-group>
-        <note priority="1" from="description">Button text to log in</note>
+      </trans-unit>
+      <trans-unit id="4326923922142661030" datatype="html">
+        <source>Don&apos;t have an account? Create one</source>
+        <target>ليس لديك حساب؟ أنشئ واحدا</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="8585025342188978668" datatype="html">
         <source>Fikra</source>
@@ -155,12 +166,61 @@
         </context-group>
         <note priority="1" from="description">Navigation link to statistics page</note>
       </trans-unit>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <target>تسجيل الخروج</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">Logout button</note>
+      </trans-unit>
+      <trans-unit id="41074547664783243" datatype="html">
+        <source>Create New Account</source>
+        <target>إنشاء حساب جديد</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2133914456850849952" datatype="html">
+        <source>Join Fikra to submit your ideas</source>
+        <target>انضم إلى فكرة لتقديم أفكارك</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3955967824702499842" datatype="html">
+        <source>Department</source>
+        <target>الإدارة</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <target>تسجيل</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/register.component.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4319786573708387572" datatype="html">
+        <source>Back to Home</source>
+        <target>العودة إلى الرئيسية</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="2472481031154552519" datatype="html">
         <source>Application Statistics</source>
         <target>إحصائيات التطبيق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
-          <context context-type="linenumber">2,4</context>
+          <context context-type="linenumber">6,8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7219656429785656446" datatype="html">
@@ -168,7 +228,7 @@
         <target>الأفكار حسب الإدارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
-          <context context-type="linenumber">5,6</context>
+          <context context-type="linenumber">9,10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4394753646045895431" datatype="html">
@@ -176,7 +236,7 @@
         <target>الأفكار حسب التصنيف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/stats-dashboard/stats-dashboard.component.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
     </body>
