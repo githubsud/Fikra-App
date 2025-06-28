@@ -3,13 +3,13 @@
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 import datetime
 
 from database import Base
 
 # =================================================================
-# 1. UPDATED User Model
+# User Model
 # =================================================================
 class User(Base):
     __tablename__ = "users"
@@ -20,14 +20,13 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
 
-    # Relationships to other tables
     ideas = relationship("Idea", back_populates="owner")
-    comments = relationship("Comment", back_populates="owner") # <-- NEW
-    votes = relationship("Vote", back_populates="owner")       # <-- NEW
+    comments = relationship("Comment", back_populates="owner")
+    votes = relationship("Vote", back_populates="owner")
 
 
 # =================================================================
-# 2. UPDATED Idea Model
+# Idea Model (with new embedding column)
 # =================================================================
 class Idea(Base):
     __tablename__ = "ideas"
@@ -38,47 +37,38 @@ class Idea(Base):
     language = Column(String, default='en')
     ai_classification = Column(String, nullable=True)
     ai_enhanced_text = Column(Text, nullable=True)
+    embedding = Column(Text, nullable=True)  # <-- NEW: To store the vector as a JSON string
     
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    # Relationships to other tables
     owner = relationship("User", back_populates="ideas")
-    comments = relationship("Comment", back_populates="idea", cascade="all, delete-orphan") # <-- NEW
-    votes = relationship("Vote", back_populates="idea", cascade="all, delete-orphan")       # <-- NEW
+    comments = relationship("Comment", back_populates="idea", cascade="all, delete-orphan")
+    votes = relationship("Vote", back_populates="idea", cascade="all, delete-orphan")
 
 
 # =================================================================
-# 3. NEW SQLAlchemy Vote Model
+# Vote & Comment Models
 # =================================================================
 class Vote(Base):
     __tablename__ = "votes"
-
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     idea_id = Column(Integer, ForeignKey("ideas.id"), nullable=False)
-    
     owner = relationship("User", back_populates="votes")
     idea = relationship("Idea", back_populates="votes")
 
-
-# =================================================================
-# 4. NEW SQLAlchemy Comment Model
-# =================================================================
 class Comment(Base):
     __tablename__ = "comments"
-
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text, nullable=False)
     submission_date = Column(DateTime(timezone=True), server_default=func.now())
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     idea_id = Column(Integer, ForeignKey("ideas.id"), nullable=False)
-
     owner = relationship("User", back_populates="comments")
     idea = relationship("Idea", back_populates="comments")
 
-
 # =================================================================
-# Pydantic Schemas (for API validation and responses)
+# Pydantic Schemas
 # =================================================================
 
 # --- User Schemas ---
@@ -92,17 +82,17 @@ class UserCreate(UserBase):
 class UserInDB(UserBase):
     id: int
     is_active: bool
-    class Config: from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserResponse(UserBase):
     id: int
-    class Config: from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Token Schema ---
 class TokenData(BaseModel):
     username: str | None = None
 
-# --- NEW Comment Schemas ---
+# --- Comment Schemas ---
 class CommentBase(BaseModel):
     text: str
 
@@ -113,7 +103,7 @@ class CommentResponse(CommentBase):
     id: int
     submission_date: datetime.datetime
     owner: UserResponse
-    class Config: from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Idea Schemas ---
 class IdeaCreate(BaseModel):
@@ -128,9 +118,9 @@ class IdeaResponse(BaseModel):
     ai_classification: str | None = None
     ai_enhanced_text: str | None = None
     owner: UserResponse
-    comments: list[CommentResponse] = [] # <-- ADDED comments to the response
-    vote_count: int = 0                  # <-- ADDED vote count to the response
-    class Config: from_attributes = True
+    comments: list[CommentResponse] = []
+    vote_count: int = 0
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Statistics Schemas ---
 class StatItem(BaseModel):
@@ -141,3 +131,11 @@ class StatsResponse(BaseModel):
     ideas_by_department: list[StatItem]
     ideas_by_classification: list[StatItem]
 
+
+class FindSimilarRequest(BaseModel):
+    text: str
+
+class SimilarIdeaResponse(BaseModel):
+    id: int
+    original_text: str
+    similarity: float

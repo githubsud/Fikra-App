@@ -2,9 +2,14 @@
 
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func
+import json
+import numpy as np # <-- 1. Import numpy
+
 import models
 import security
 
+# (Your existing User, Idea, Vote, Comment, and Stats functions remain here...)
+# ...
 # =================================================================
 # User CRUD Functions
 # =================================================================
@@ -29,10 +34,6 @@ def create_user(db: Session, user: models.UserCreate):
 # =================================================================
 
 def get_ideas(db: Session, skip: int = 0, limit: int = 100):
-    """
-    Gets ideas and eagerly loads related data (owner, comments, votes)
-    to prevent performance issues.
-    """
     return (
         db.query(models.Idea)
         .options(
@@ -46,13 +47,14 @@ def get_ideas(db: Session, skip: int = 0, limit: int = 100):
         .all()
     )
 
-def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classification: str, enhanced_text: str):
+def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classification: str, enhanced_text: str, embedding: list[float]):
     db_idea = models.Idea(
         original_text=idea.original_text,
         language=idea.language,
         owner_id=user_id,
         ai_classification=classification,
-        ai_enhanced_text=enhanced_text
+        ai_enhanced_text=enhanced_text,
+        embedding=json.dumps(embedding)
     )
     db.add(db_idea)
     db.commit()
@@ -60,14 +62,45 @@ def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classificati
     return db_idea
 
 # =================================================================
-# NEW: Vote & Comment CRUD Functions
+# NEW: Similarity Search Function
 # =================================================================
 
+def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5):
+    """Finds the most similar ideas based on embedding vectors."""
+    all_ideas = db.query(models.Idea).filter(models.Idea.embedding.isnot(None)).all()
+    
+    if not all_ideas:
+        return []
+
+    query_vector = np.array(query_embedding)
+    
+    similarities = []
+    for idea in all_ideas:
+        # Load the stored embedding from its JSON string format
+        idea_vector = np.array(json.loads(idea.embedding))
+        
+        # Calculate cosine similarity
+        dot_product = np.dot(query_vector, idea_vector)
+        norm_query = np.linalg.norm(query_vector)
+        norm_idea = np.linalg.norm(idea_vector)
+        
+        # Avoid division by zero
+        if norm_query > 0 and norm_idea > 0:
+            similarity = dot_product / (norm_query * norm_idea)
+            similarities.append((idea, similarity))
+
+    # Sort by similarity score in descending order
+    similarities.sort(key=lambda x: x[1], reverse=True)
+
+    # Return the top N most similar ideas
+    return similarities[:top_k]
+
+
+# =================================================================
+# Vote & Comment CRUD Functions
+# =================================================================
+# (...your vote and comment functions are here...)
 def add_or_remove_vote(db: Session, idea_id: int, user_id: int):
-    """
-    Adds a vote if the user hasn't voted for the idea yet.
-    Removes the vote if the user has already voted.
-    """
     existing_vote = (
         db.query(models.Vote)
         .filter(models.Vote.idea_id == idea_id, models.Vote.owner_id == user_id)
@@ -86,7 +119,6 @@ def add_or_remove_vote(db: Session, idea_id: int, user_id: int):
         return new_vote
 
 def create_idea_comment(db: Session, comment: models.CommentCreate, idea_id: int, user_id: int):
-    """Creates a new comment for an idea."""
     db_comment = models.Comment(
         text=comment.text, owner_id=user_id, idea_id=idea_id
     )
@@ -94,11 +126,10 @@ def create_idea_comment(db: Session, comment: models.CommentCreate, idea_id: int
     db.commit()
     db.refresh(db_comment)
     return db_comment
-
 # =================================================================
 # Statistics CRUD Functions
 # =================================================================
-
+# (...your stats functions are here...)
 def get_idea_count_by_department(db: Session):
     return (
         db.query(models.User.department, func.count(models.Idea.id).label("idea_count"))

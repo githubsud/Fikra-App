@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Annotated
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm # <-- Corrected Import
 from datetime import timedelta
 
 import models, crud, gemini_client, security
@@ -74,12 +74,37 @@ def create_idea_endpoint(
 ):
     classification = gemini_client.classify_idea(idea.original_text, language=idea.language)
     enhanced_text = gemini_client.enhance_idea(idea.original_text, language=idea.language)
+    embedding = gemini_client.generate_embedding(idea.original_text)
     
     db_idea = crud.create_idea(
-        db=db, idea=idea, user_id=current_user.id, classification=classification, enhanced_text=enhanced_text
+        db=db, idea=idea, user_id=current_user.id, classification=classification, enhanced_text=enhanced_text, embedding=embedding
     )
-    # Manually construct response to ensure vote_count is included
-    return models.IdeaResponse.model_validate(db_idea)
+    
+    idea_response = models.IdeaResponse.model_validate(db_idea)
+    idea_response.vote_count = len(db_idea.votes)
+    return idea_response
+
+@app.post("/ideas/find-similar", response_model=List[models.SimilarIdeaResponse], tags=["Ideas"])
+def find_similar_ideas_endpoint(
+    request: models.FindSimilarRequest,
+    db: Session = Depends(get_db)
+):
+    if not request.text or not request.text.strip():
+        return []
+
+    query_embedding = gemini_client.generate_embedding(request.text)
+    similar_ideas = crud.find_similar_ideas(db, query_embedding)
+
+    response = [
+        {
+            "id": idea.id,
+            "original_text": idea.original_text,
+            "similarity": score,
+        }
+        for idea, score in similar_ideas
+    ]
+    return response
+
 
 @app.get("/ideas/", response_model=List[models.IdeaResponse], tags=["Ideas"])
 def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -88,13 +113,13 @@ def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(g
     results = []
     for idea in ideas_from_db:
         idea_response = models.IdeaResponse.model_validate(idea)
-        idea_response.vote_count = len(idea.votes)  # Calculate vote count
+        idea_response.vote_count = len(idea.votes)
         results.append(idea_response)
         
     return results
 
 # =================================================================
-# NEW: Voting and Commenting Endpoints
+# Voting and Commenting Endpoints
 # =================================================================
 @app.post("/ideas/{idea_id}/vote", status_code=200, tags=["Ideas"])
 def vote_for_idea(

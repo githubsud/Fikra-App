@@ -4,19 +4,15 @@ import os
 
 # Configure the API key securely
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash')
 
+# Use a specific model for text generation tasks
+generation_model = genai.GenerativeModel('gemini-1.5-flash')
 
 def get_language_name(code: str) -> str:
-    """Converts a language code to its full name using the new logic."""
-    # Print the exact code we received from the main server file
-    print(f"--- BACKEND DEBUG: get_language_name received code: '{code}' ---")
-
-    # Your suggested logic
-    if code.lower().startswith('en'):
-        return 'English'
-    else:
+    """Converts a language code (e.g., 'ar-QA') to its full name."""
+    if code.lower().startswith('ar'):
         return 'Arabic'
+    return 'English'
 
 def classify_idea(idea_text: str, language: str) -> str:
     """Classifies an idea into a single category in the specified language."""
@@ -38,7 +34,7 @@ def classify_idea(idea_text: str, language: str) -> str:
     
     Return only the category name in {lang_name}.
     """
-    response = model.generate_content(prompt)
+    response = generation_model.generate_content(prompt)
     return response.text.strip()
 
 def enhance_idea(idea_text: str, language: str) -> str:
@@ -51,5 +47,18 @@ def enhance_idea(idea_text: str, language: str) -> str:
 
     Original Idea: "{idea_text}"
     """
-    response = model.generate_content(prompt)
+    response = generation_model.generate_content(prompt)
     return response.text.strip()
+
+# =================================================================
+# NEW: Function to Generate Embeddings
+# =================================================================
+def generate_embedding(text: str):
+    """Generates an embedding vector for a given piece of text."""
+    # We use a specific model optimized for creating embeddings.
+    result = genai.embed_content(
+        model="models/text-embedding-004",
+        content=text,
+        task_type="RETRIEVAL_DOCUMENT"
+    )
+    return result['embedding']
