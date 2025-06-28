@@ -6,9 +6,8 @@
         <source>Previous Ideas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
-          <context context-type="linenumber">2,5</context>
+          <context context-type="linenumber">2,4</context>
         </context-group>
-        <note priority="1" from="description">Title for the list of previously submitted ideas</note>
       </trans-unit>
       <trans-unit id="4656320130731332741" datatype="html">
         <source> Submitted by <x id="INTERPOLATION" equiv-text="{{ idea.owner.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ idea.submission_date | date:&apos;short&apos; }}"/> </source>
@@ -16,23 +15,55 @@
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
           <context context-type="linenumber">9,10</context>
         </context-group>
-        <note priority="1" from="description">Card subtitle showing author and date</note>
       </trans-unit>
       <trans-unit id="7608694651216786191" datatype="html">
         <source>Enhanced Proposal:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">17,18</context>
         </context-group>
-        <note priority="1" from="description">Section header for the AI enhanced proposal</note>
+      </trans-unit>
+      <trans-unit id="8439541273035882201" datatype="html">
+        <source> View Comments (<x id="INTERPOLATION" equiv-text="{{ idea.comments.length }}"/>) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2432179464617526197" datatype="html">
+        <source>by <x id="INTERPOLATION" equiv-text="{{ comment.owner.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ comment.submission_date | date:&apos;short&apos; }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="466730294804943734" datatype="html">
+        <source>No comments yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6999356248762503689" datatype="html">
+        <source>Add a comment...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8386493650739116899" datatype="html">
+        <source>Post</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="8946289753309548697" datatype="html">
         <source> No ideas have been submitted yet. Be the first! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
-          <context context-type="linenumber">22,25</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
-        <note priority="1" from="description">Message shown when there are no ideas to display</note>
       </trans-unit>
       <trans-unit id="6318721872397536669" datatype="html">
         <source>قدّم فكرة جديدة / Submit a New Idea</source>

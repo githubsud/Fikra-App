@@ -29,14 +29,53 @@
         </context-group>
         <note priority="1" from="description">Section header for the AI enhanced proposal</note>
       </trans-unit>
+      <trans-unit id="8439541273035882201" datatype="html">
+        <source> View Comments (<x id="INTERPOLATION" equiv-text="{{ idea.comments.length }}"/>) </source>
+        <target> عرض التعليقات (<x id="INTERPOLATION" equiv-text="{{ idea.comments.length }}"/>) </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2432179464617526197" datatype="html">
+        <source>by <x id="INTERPOLATION" equiv-text="{{ comment.owner.username }}"/> on <x id="INTERPOLATION_1" equiv-text="{{ comment.submission_date | date:&apos;short&apos; }}"/></source>
+        <target>بواسطة <x id="INTERPOLATION" equiv-text="{{ comment.owner.username }}"/> في <x id="INTERPOLATION_1" equiv-text="{{ comment.submission_date | date:&apos;short&apos; }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="466730294804943734" datatype="html">
+        <source>No comments yet.</source>
+        <target>لا توجد تعليقات حتى الآن.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6999356248762503689" datatype="html">
+        <source>Add a comment...</source>
+        <target>أضف تعليقًا...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8386493650739116899" datatype="html">
+        <source>Post</source>
+        <target>نشر</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="8946289753309548697" datatype="html">
         <source> No ideas have been submitted yet. Be the first! </source>
         <target> لم يتم تقديم أي أفكار بعد. كن الأول! </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dashboard/dashboard.html</context>
-          <context context-type="linenumber">22,25</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
-        <note priority="1" from="description">Message shown when there are no ideas to display</note>
       </trans-unit>
       <trans-unit id="6318721872397536669" datatype="html">
         <source>قدّم فكرة جديدة / Submit a New Idea</source>

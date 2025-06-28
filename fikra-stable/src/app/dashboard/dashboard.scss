@@ -1,6 +1,4 @@
-// src/app/dashboard/dashboard.scss
-
-// Use the CSS variables from our global stylesheet
+// src/app/dashboard/dashboard.component.scss
 :host {
   display: block;
 }
@@ -21,8 +19,8 @@ h2 {
 .idea-card {
   background-color: var(--navy-light);
   color: var(--text-light);
-  margin-bottom: 25px; // Space between cards
-  border-left: 4px solid transparent; // For hover effect
+  margin-bottom: 25px;
+  border-left: 4px solid transparent;
   transition: border-left 0.3s ease-in-out;
 }
 
@@ -32,7 +30,7 @@ h2 {
 
 .classification-tag {
   display: inline-block;
-  background-color: rgba(243, 156, 18, 0.15); // Transparent orange
+  background-color: rgba(243, 156, 18, 0.15);
   color: var(--fikra-orange);
   padding: 5px 12px;
   border-radius: 15px;
@@ -44,9 +42,9 @@ h2 {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 15px;
   border-radius: 4px;
-  white-space: pre-wrap; // Allows text to wrap
+  white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: inherit; // Use the app's main font
+  font-family: inherit;
   color: var(--text-secondary);
 }
 
@@ -55,4 +53,64 @@ h2 {
   font-size: 1.2em;
   color: var(--text-secondary);
   padding: 40px;
+}
+
+// --- NEW STYLES ---
+
+.card-actions {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vote-count {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+// Remove padding from the expansion panel to make it flush
+.comments-panel {
+  .mat-expansion-panel-content {
+    padding: 0;
+  }
+  .mat-expansion-panel-header {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.comment-form {
+  display: flex;
+  padding: 16px;
+  gap: 16px;
+  align-items: center;
+
+  mat-form-field {
+    flex-grow: 1;
+  }
+}
+
+.no-comments {
+  padding: 16px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+// Style the comment list items
+.mat-mdc-list-item-title {
+  color: var(--text-light);
+}
+
+.mat-mdc-list-item-line {
+  color: var(--text-secondary);
+}
+
+// Add this to the bottom of dashboard.scss
+
+// Override text color for items inside the comments panel
+.comments-panel {
+  .mat-mdc-list-item-title,
+  .mat-mdc-list-item-line {
+    color: rgba(0, 0, 0, 0.87); // Standard dark text color
+  }
 }

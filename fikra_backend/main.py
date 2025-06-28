@@ -61,10 +61,7 @@ def get_stats(db: Session = Depends(get_db)):
     dept_stats = [{"name": name, "value": value} for name, value in dept_stats_raw]
     class_stats = [{"name": name, "value": value} for name, value in class_stats_raw]
     
-    return {
-        "ideas_by_department": dept_stats,
-        "ideas_by_classification": class_stats,
-    }
+    return { "ideas_by_department": dept_stats, "ideas_by_classification": class_stats }
 
 # =================================================================
 # Idea Endpoints
@@ -72,51 +69,46 @@ def get_stats(db: Session = Depends(get_db)):
 @app.post("/ideas/", response_model=models.IdeaResponse, status_code=201, tags=["Ideas"])
 def create_idea_endpoint(
     idea: models.IdeaCreate,
-    current_user: models.User = Depends(security.get_current_active_user), # <-- 1. This protects the endpoint and gets the user
+    current_user: models.User = Depends(security.get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Creates a new idea, owned by the currently authenticated user.
-    """
-    # Call Gemini API
     classification = gemini_client.classify_idea(idea.original_text, language=idea.language)
     enhanced_text = gemini_client.enhance_idea(idea.original_text, language=idea.language)
     
-    # Create the idea in the database, using the current_user's id
     db_idea = crud.create_idea(
-        db=db,
-        idea=idea,
-        user_id=current_user.id, # <-- 2. Use the ID from the logged-in user
-        classification=classification,
-        enhanced_text=enhanced_text
+        db=db, idea=idea, user_id=current_user.id, classification=classification, enhanced_text=enhanced_text
     )
-    return db_idea
+    # Manually construct response to ensure vote_count is included
+    return models.IdeaResponse.model_validate(db_idea)
 
 @app.get("/ideas/", response_model=List[models.IdeaResponse], tags=["Ideas"])
 def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     ideas_from_db = crud.get_ideas(db, skip=skip, limit=limit)
     
-    # Manually build the response to ensure nested owner data is loaded correctly
     results = []
     for idea in ideas_from_db:
-        if idea.owner:
-            owner_data = {
-                "id": idea.owner.id,
-                "username": idea.owner.username,
-                "department": idea.owner.department
-            }
-        else:
-            owner_data = { "id": 0, "username": "N/A", "department": "N/A" }
-            
-        idea_data = {
-            "id": idea.id,
-            "submission_date": idea.submission_date,
-            "original_text": idea.original_text,
-            "language": idea.language,
-            "ai_classification": idea.ai_classification,
-            "ai_enhanced_text": idea.ai_enhanced_text,
-            "owner": owner_data
-        }
-        results.append(idea_data)
-    
+        idea_response = models.IdeaResponse.model_validate(idea)
+        idea_response.vote_count = len(idea.votes)  # Calculate vote count
+        results.append(idea_response)
+        
     return results
+
+# =================================================================
+# NEW: Voting and Commenting Endpoints
+# =================================================================
+@app.post("/ideas/{idea_id}/vote", status_code=200, tags=["Ideas"])
+def vote_for_idea(
+    idea_id: int,
+    current_user: models.User = Depends(security.get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    return crud.add_or_remove_vote(db=db, idea_id=idea_id, user_id=current_user.id)
+
+@app.post("/ideas/{idea_id}/comments", response_model=models.CommentResponse, status_code=201, tags=["Ideas"])
+def create_comment_for_idea(
+    idea_id: int,
+    comment: models.CommentCreate,
+    current_user: models.User = Depends(security.get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    return crud.create_idea_comment(db=db, comment=comment, idea_id=idea_id, user_id=current_user.id)

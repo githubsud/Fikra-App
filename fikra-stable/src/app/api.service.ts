@@ -3,10 +3,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// --- INTERFACES FOR IDEAS ---
+// --- DATA INTERFACES ---
+
 export interface User {
   id: number;
   username: string;
+}
+
+export interface Comment {
+  id: number;
+  text: string;
+  submission_date: Date;
+  owner: User;
 }
 
 export interface Idea {
@@ -17,6 +25,8 @@ export interface Idea {
   ai_classification: string;
   ai_enhanced_text: string;
   owner: User;
+  comments: Comment[];
+  vote_count: number;
 }
 
 export interface IdeaCreate {
@@ -24,7 +34,10 @@ export interface IdeaCreate {
   language: string;
 }
 
-// --- NEW: INTERFACES FOR STATISTICS ---
+export interface CommentCreate {
+  text: string;
+}
+
 export interface StatItem {
   name: string;
   value: number;
@@ -50,12 +63,20 @@ export class ApiService {
   }
 
   submitIdea(idea: IdeaCreate): Observable<any> {
-    // We will add the auth token here in a future step
     return this.http.post(`${this.apiUrl}/ideas/`, idea);
   }
 
-  // --- NEW: Statistics Method ---
+  // --- Statistics Method ---
   getStats(): Observable<StatsResponse> {
     return this.http.get<StatsResponse>(`${this.apiUrl}/stats/`);
+  }
+
+  // --- NEW: Voting and Commenting Methods ---
+  addVote(ideaId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/ideas/${ideaId}/vote`, {});
+  }
+
+  addComment(ideaId: number, commentData: CommentCreate): Observable<Comment> {
+    return this.http.post<Comment>(`${this.apiUrl}/ideas/${ideaId}/comments`, commentData);
   }
 }

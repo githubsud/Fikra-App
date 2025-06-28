@@ -1,4 +1,4 @@
-# fikra_backend/models.py
+# fikra-backend/models.py
 
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
@@ -9,7 +9,7 @@ import datetime
 from database import Base
 
 # =================================================================
-# 1. NEW SQLAlchemy User Model (This defines the 'users' table)
+# 1. UPDATED User Model
 # =================================================================
 class User(Base):
     __tablename__ = "users"
@@ -20,12 +20,14 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
 
-    # This creates a relationship so you can access all ideas from a user object
+    # Relationships to other tables
     ideas = relationship("Idea", back_populates="owner")
+    comments = relationship("Comment", back_populates="owner") # <-- NEW
+    votes = relationship("Vote", back_populates="owner")       # <-- NEW
 
 
 # =================================================================
-# 2. UPDATED SQLAlchemy Idea Model (Adds a link to the user)
+# 2. UPDATED Idea Model
 # =================================================================
 class Idea(Base):
     __tablename__ = "ideas"
@@ -37,16 +39,49 @@ class Idea(Base):
     ai_classification = Column(String, nullable=True)
     ai_enhanced_text = Column(Text, nullable=True)
     
-    # This is the foreign key linking to the 'users' table
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    # This creates a relationship so you can access the owner from an idea object
+    # Relationships to other tables
     owner = relationship("User", back_populates="ideas")
+    comments = relationship("Comment", back_populates="idea", cascade="all, delete-orphan") # <-- NEW
+    votes = relationship("Vote", back_populates="idea", cascade="all, delete-orphan")       # <-- NEW
 
 
 # =================================================================
-# 3. NEW Pydantic Schemas for Users (For API validation)
+# 3. NEW SQLAlchemy Vote Model
 # =================================================================
+class Vote(Base):
+    __tablename__ = "votes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    idea_id = Column(Integer, ForeignKey("ideas.id"), nullable=False)
+    
+    owner = relationship("User", back_populates="votes")
+    idea = relationship("Idea", back_populates="votes")
+
+
+# =================================================================
+# 4. NEW SQLAlchemy Comment Model
+# =================================================================
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(Text, nullable=False)
+    submission_date = Column(DateTime(timezone=True), server_default=func.now())
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    idea_id = Column(Integer, ForeignKey("ideas.id"), nullable=False)
+
+    owner = relationship("User", back_populates="comments")
+    idea = relationship("Idea", back_populates="comments")
+
+
+# =================================================================
+# Pydantic Schemas (for API validation and responses)
+# =================================================================
+
+# --- User Schemas ---
 class UserBase(BaseModel):
     username: str
     department: str
@@ -57,20 +92,30 @@ class UserCreate(UserBase):
 class UserInDB(UserBase):
     id: int
     is_active: bool
-    
-    class Config:
-        from_attributes = True
+    class Config: from_attributes = True
 
-# This is the schema for returning user info in an API response (without the password)
 class UserResponse(UserBase):
     id: int
+    class Config: from_attributes = True
 
-    class Config:
-        from_attributes = True
+# --- Token Schema ---
+class TokenData(BaseModel):
+    username: str | None = None
 
-# =================================================================
-# 4. UPDATED Pydantic Schemas for Ideas (Now includes user info)
-# =================================================================
+# --- NEW Comment Schemas ---
+class CommentBase(BaseModel):
+    text: str
+
+class CommentCreate(CommentBase):
+    pass
+
+class CommentResponse(CommentBase):
+    id: int
+    submission_date: datetime.datetime
+    owner: UserResponse
+    class Config: from_attributes = True
+
+# --- Idea Schemas ---
 class IdeaCreate(BaseModel):
     original_text: str
     language: str
@@ -82,22 +127,17 @@ class IdeaResponse(BaseModel):
     language: str
     ai_classification: str | None = None
     ai_enhanced_text: str | None = None
-    owner: UserResponse # <-- The idea response now includes the user who owns it
+    owner: UserResponse
+    comments: list[CommentResponse] = [] # <-- ADDED comments to the response
+    vote_count: int = 0                  # <-- ADDED vote count to the response
+    class Config: from_attributes = True
 
-    class Config:
-        from_attributes = True
-
-
+# --- Statistics Schemas ---
 class StatItem(BaseModel):
-    """Represents a single data point for a chart (e.g., a bar or a pie slice)."""
     name: str
     value: int
 
 class StatsResponse(BaseModel):
-    """The full JSON response for the statistics endpoint."""
     ideas_by_department: list[StatItem]
     ideas_by_classification: list[StatItem]
 
-class TokenData(BaseModel):
-    """The data contained within the JWT."""
-    username: str | None = None
