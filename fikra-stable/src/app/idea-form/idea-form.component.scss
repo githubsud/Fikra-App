@@ -49,3 +49,26 @@ h2 {
     opacity: 1;
   }
 }
+
+// Add these new styles to the bottom of the file
+
+.similar-ideas-container {
+  width: 100%;
+  max-width: 700px;
+  margin-top: -10px; // Pull it closer to the text area
+  margin-bottom: 20px;
+  min-height: 4px; // For the progress bar
+}
+
+.similar-ideas-container h3 {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+// Style the list of similar ideas
+.mat-mdc-list-item {
+  // Override the default light text color for better readability
+  .mat-mdc-list-item-title, .mat-mdc-list-item-line {
+    color: rgba(0, 0, 0, 0.87);
+  }
+}

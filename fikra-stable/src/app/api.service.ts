@@ -29,6 +29,13 @@ export interface Idea {
   vote_count: number;
 }
 
+// --- NEW: INTERFACE FOR SIMILAR IDEAS ---
+export interface SimilarIdea {
+  id: number;
+  original_text: string;
+  similarity: number;
+}
+
 export interface IdeaCreate {
   original_text: string;
   language: string;
@@ -66,12 +73,17 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/ideas/`, idea);
   }
 
+  // --- NEW: SIMILARITY SEARCH METHOD ---
+  findSimilarIdeas(text: string): Observable<SimilarIdea[]> {
+    return this.http.post<SimilarIdea[]>(`${this.apiUrl}/ideas/find-similar`, { text });
+  }
+
   // --- Statistics Method ---
   getStats(): Observable<StatsResponse> {
     return this.http.get<StatsResponse>(`${this.apiUrl}/stats/`);
   }
 
-  // --- NEW: Voting and Commenting Methods ---
+  // --- Voting and Commenting Methods ---
   addVote(ideaId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/ideas/${ideaId}/vote`, {});
   }

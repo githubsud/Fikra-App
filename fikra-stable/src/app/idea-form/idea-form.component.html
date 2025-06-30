@@ -1,11 +1,12 @@
 <div class="form-container">
-  <h2 i18n="Title for the new idea submission form">قدّم فكرة جديدة / Submit a New Idea</h2>
+  <h2 i18n>قدّم فكرة جديدة / Submit a New Idea</h2>
 
   <mat-form-field appearance="fill" class="idea-textarea">
-    <mat-label i18n="Placeholder text inside the idea text area">Describe your idea, or use the microphone...</mat-label>
+    <mat-label i18n>Describe your idea, or use the microphone...</mat-label>
     <textarea matInput
               rows="8"
               [(ngModel)]="ideaText"
+              (ngModelChange)="onSearchTextChange($event)"
               i18n-placeholder="Example text inside the idea text area"
               placeholder="e.g., 'We should create a mobile app for lawyers to track case status.'"></textarea>
 
@@ -16,12 +17,31 @@
     </button>
   </mat-form-field>
 
-  <div *ngIf="isRecording" class="listening-indicator" i18n="Indicator text when microphone is on">
+  <!-- NEW: SIMILAR IDEAS SECTION -->
+  <div class="similar-ideas-container">
+    @if (isSearching) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    @if (similarIdeas.length > 0) {
+      <h3 i18n>Possibly Related Ideas...</h3>
+      <mat-list role="list">
+        @for (idea of similarIdeas; track idea.id) {
+          <mat-list-item role="listitem">
+            <span matListItemTitle>{{ idea.original_text }}</span>
+            <span matListItemLine i18n>Similarity: {{ idea.similarity | percent:'1.0-0' }}</span>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-list>
+    }
+  </div>
+
+  <div *ngIf="isRecording" class="listening-indicator" i18n>
     Listening... / جارٍ الاستماع...
   </div>
 
   <button mat-raised-button color="accent" (click)="submit()" [disabled]="!ideaText.trim() || isSubmitting">
-    <span *ngIf="!isSubmitting" i18n="Button text to submit an idea for enhancement">Submit & Enhance</span>
-    <span *ngIf="isSubmitting" i18n="Button text while an idea is being submitted">Submitting...</span>
+    <span *ngIf="!isSubmitting" i18n>Submit & Enhance</span>
+    <span *ngIf="isSubmitting" i18n>Submitting...</span>
   </button>
 </div>

@@ -3,7 +3,7 @@
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func
 import json
-import numpy as np # <-- 1. Import numpy
+import numpy as np
 
 import models
 import security
@@ -62,7 +62,7 @@ def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classificati
     return db_idea
 
 # =================================================================
-# NEW: Similarity Search Function
+# Similarity Search Function (with Threshold)
 # =================================================================
 
 def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5):
@@ -74,20 +74,23 @@ def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5
 
     query_vector = np.array(query_embedding)
     
+    # Define a minimum similarity score to be considered a match
+    similarity_threshold = 0.7  # This means 70% similar. You can adjust this value.
+    
     similarities = []
     for idea in all_ideas:
-        # Load the stored embedding from its JSON string format
         idea_vector = np.array(json.loads(idea.embedding))
         
-        # Calculate cosine similarity
         dot_product = np.dot(query_vector, idea_vector)
         norm_query = np.linalg.norm(query_vector)
         norm_idea = np.linalg.norm(idea_vector)
         
-        # Avoid division by zero
         if norm_query > 0 and norm_idea > 0:
             similarity = dot_product / (norm_query * norm_idea)
-            similarities.append((idea, similarity))
+            
+            # NEW: Only add the idea if it meets our threshold
+            if similarity > similarity_threshold:
+                similarities.append((idea, similarity))
 
     # Sort by similarity score in descending order
     similarities.sort(key=lambda x: x[1], reverse=True)
@@ -99,7 +102,6 @@ def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5
 # =================================================================
 # Vote & Comment CRUD Functions
 # =================================================================
-# (...your vote and comment functions are here...)
 def add_or_remove_vote(db: Session, idea_id: int, user_id: int):
     existing_vote = (
         db.query(models.Vote)
@@ -129,7 +131,6 @@ def create_idea_comment(db: Session, comment: models.CommentCreate, idea_id: int
 # =================================================================
 # Statistics CRUD Functions
 # =================================================================
-# (...your stats functions are here...)
 def get_idea_count_by_department(db: Session):
     return (
         db.query(models.User.department, func.count(models.Idea.id).label("idea_count"))

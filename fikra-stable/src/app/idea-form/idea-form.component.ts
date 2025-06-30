@@ -1,16 +1,22 @@
 // src/app/idea-form/idea-form.component.ts
 
-import { Component, Output, EventEmitter, Inject, LOCALE_ID, ChangeDetectorRef } from '@angular/core';
+import { Component, Output, EventEmitter, Inject, LOCALE_ID, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Import the full Angular Material Modules
+// RxJS imports for real-time search
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
+// Import Material Modules
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list'; // For the results list
+import { MatProgressBarModule } from '@angular/material/progress-bar'; // For loading indicator
 
-import { ApiService, IdeaCreate } from '../api.service';
+import { ApiService, IdeaCreate, SimilarIdea } from '../api.service';
 
 declare var webkitSpeechRecognition: any;
 
@@ -23,26 +29,34 @@ declare var webkitSpeechRecognition: any;
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatListModule,
+    MatProgressBarModule
   ],
   templateUrl: './idea-form.component.html',
   styleUrls: ['./idea-form.component.scss'],
 })
-export class IdeaFormComponent {
+export class IdeaFormComponent implements OnInit, OnDestroy {
   @Output() ideaSubmitted = new EventEmitter<void>();
 
   ideaText: string = '';
   isRecording: boolean = false;
   isSubmitting: boolean = false;
   
+  // --- NEW PROPERTIES FOR SIMILARITY SEARCH ---
+  similarIdeas: SimilarIdea[] = [];
+  isSearching: boolean = false;
+  private searchText$ = new Subject<string>();
+  private searchSubscription!: Subscription;
+  
   recognition: any;
+  textBeforeRecording: string = '';
 
   constructor(
     private apiService: ApiService,
     @Inject(LOCALE_ID) public activeLocale: string,
-    private cdr: ChangeDetectorRef // <-- 1. INJECT ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {
-    // Check if the API is available
     if ('webkitSpeechRecognition' in window) {
       this.recognition = new webkitSpeechRecognition();
       this.recognition.continuous = true;
@@ -50,6 +64,35 @@ export class IdeaFormComponent {
     } else {
       console.error("Speech recognition not supported in this browser.");
     }
+  }
+
+  ngOnInit(): void {
+    // Set up the real-time search logic
+    this.searchSubscription = this.searchText$.pipe(
+      debounceTime(500), // Wait for 500ms after the user stops typing
+      distinctUntilChanged(), // Only search if the text has changed
+      switchMap(text => { // Switch to a new API call, cancelling previous ones
+        if (!text || text.length < 10) {
+          this.similarIdeas = []; // Clear results if text is too short
+          return [];
+        }
+        this.isSearching = true;
+        return this.apiService.findSimilarIdeas(text);
+      })
+    ).subscribe(results => {
+      this.isSearching = false;
+      this.similarIdeas = results;
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up the subscription to prevent memory leaks
+    this.searchSubscription.unsubscribe();
+  }
+
+  // NEW: This method is called every time the user types
+  onSearchTextChange(text: string): void {
+    this.searchText$.next(text);
   }
 
   toggleVoiceRecognition() {
