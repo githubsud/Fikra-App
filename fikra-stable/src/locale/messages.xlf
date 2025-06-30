@@ -71,47 +71,56 @@
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
           <context context-type="linenumber">2,4</context>
         </context-group>
-        <note priority="1" from="description">Title for the new idea submission form</note>
       </trans-unit>
       <trans-unit id="5355482033583845762" datatype="html">
         <source>Describe your idea, or use the microphone...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
-          <context context-type="linenumber">5,7</context>
+          <context context-type="linenumber">5</context>
         </context-group>
-        <note priority="1" from="description">Placeholder text inside the idea text area</note>
       </trans-unit>
       <trans-unit id="2066209464624179204" datatype="html">
         <source>e.g., &apos;We should create a mobile app for lawyers to track case status.&apos;</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">11,13</context>
         </context-group>
         <note priority="1" from="description">Example text inside the idea text area</note>
+      </trans-unit>
+      <trans-unit id="4897445781684746948" datatype="html">
+        <source>Possibly Related Ideas...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7850123163858685188" datatype="html">
+        <source>Similarity: <x id="INTERPOLATION" equiv-text="{{ idea.similarity | percent:&apos;1.0-0&apos; }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="5416034288780005345" datatype="html">
         <source> Listening... / جارٍ الاستماع... </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
-          <context context-type="linenumber">20,23</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
-        <note priority="1" from="description">Indicator text when microphone is on</note>
       </trans-unit>
       <trans-unit id="5452010049139221684" datatype="html">
         <source>Submit &amp; Enhance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
-          <context context-type="linenumber">24,25</context>
+          <context context-type="linenumber">44,45</context>
         </context-group>
-        <note priority="1" from="description">Button text to submit an idea for enhancement</note>
       </trans-unit>
       <trans-unit id="3493126540529865490" datatype="html">
         <source>Submitting...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/idea-form/idea-form.component.html</context>
-          <context context-type="linenumber">25,27</context>
+          <context context-type="linenumber">45,46</context>
         </context-group>
-        <note priority="1" from="description">Button text while an idea is being submitted</note>
       </trans-unit>
       <trans-unit id="2148291660187948325" datatype="html">
         <source>Fikra Login</source>
@@ -167,7 +176,7 @@
         <source>Fikra</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
-          <context context-type="linenumber">4,6</context>
+          <context context-type="linenumber">5,8</context>
         </context-group>
         <note priority="1" from="description">Application name</note>
       </trans-unit>
@@ -175,7 +184,7 @@
         <source> Statistics </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
-          <context context-type="linenumber">8,10</context>
+          <context context-type="linenumber">11,14</context>
         </context-group>
         <note priority="1" from="description">Navigation link to statistics page</note>
       </trans-unit>
@@ -183,9 +192,8 @@
         <source>Logout</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main-layout/main-layout.html</context>
-          <context context-type="linenumber">13,14</context>
+          <context context-type="linenumber">31,32</context>
         </context-group>
-        <note priority="1" from="description">Logout button</note>
       </trans-unit>
       <trans-unit id="41074547664783243" datatype="html">
         <source>Create New Account</source>

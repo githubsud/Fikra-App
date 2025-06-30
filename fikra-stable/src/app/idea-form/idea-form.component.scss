@@ -17,9 +17,8 @@ h2 {
   width: 100%;
   max-width: 700px;
 
-  // NEW: Style for the microphone icon
   .mat-icon {
-    color: rgba(0, 0, 0, 0.6); // Darker, more visible icon color
+    color: rgba(0, 0, 0, 0.6);
     cursor: pointer;
   }
 }
@@ -50,25 +49,37 @@ h2 {
   }
 }
 
-// Add these new styles to the bottom of the file
+// --- CORRECTED STYLES FOR SIMILAR IDEAS ---
 
 .similar-ideas-container {
   width: 100%;
   max-width: 700px;
-  margin-top: -10px; // Pull it closer to the text area
+  margin-top: -10px;
   margin-bottom: 20px;
-  min-height: 4px; // For the progress bar
+  min-height: 4px; 
+  background-color: rgba(0,0,0,0.1); // Add a slightly different background
+  border-radius: 4px;
+  padding: 8px 16px;
 }
 
 .similar-ideas-container h3 {
   font-weight: 500;
   color: var(--text-secondary);
+  border-bottom: 1px solid var(--text-secondary);
+  padding-bottom: 8px;
 }
 
-// Style the list of similar ideas
-.mat-mdc-list-item {
-  // Override the default light text color for better readability
-  .mat-mdc-list-item-title, .mat-mdc-list-item-line {
-    color: rgba(0, 0, 0, 0.87);
+// Style the list of similar ideas for high contrast
+.similar-ideas-container .mat-mdc-list-item {
+  .mat-mdc-list-item-title {
+    color: var(--text-light); // Use the main bright text color
   }
+  .mat-mdc-list-item-line {
+    color: var(--text-secondary); // Use the dimmer text color for the subtitle
+  }
+}
+
+.submit-button {
+  min-width: 150px; // Gives the button a consistent width
+  min-height: 36px; // Ensures the button doesn't shrink when the spinner is shown
 }

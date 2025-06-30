@@ -29,3 +29,17 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 10px 20px rgba(243, 156, 18, 0.2);
 }
+
+// Styles for our custom success snackbar
+.snackbar-success {
+  --mdc-snackbar-container-color: #28a745; // A nice green color
+  --mat-mdc-snack-bar-button-color: #ffffff;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+// Styles for our custom error snackbar
+.snackbar-error {
+  --mdc-snackbar-container-color: #dc3545; // A standard red color for errors
+  --mat-mdc-snack-bar-button-color: #ffffff;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}

@@ -17,7 +17,6 @@
     </button>
   </mat-form-field>
 
-  <!-- NEW: SIMILAR IDEAS SECTION -->
   <div class="similar-ideas-container">
     @if (isSearching) {
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -40,8 +39,12 @@
     Listening... / جارٍ الاستماع...
   </div>
 
-  <button mat-raised-button color="accent" (click)="submit()" [disabled]="!ideaText.trim() || isSubmitting">
-    <span *ngIf="!isSubmitting" i18n>Submit & Enhance</span>
-    <span *ngIf="isSubmitting" i18n>Submitting...</span>
+  <!-- UPDATED SUBMIT BUTTON -->
+  <button mat-raised-button color="accent" (click)="submit()" [disabled]="!ideaText.trim() || isSubmitting" class="submit-button">
+    @if (!isSubmitting) {
+      <span i18n>Submit & Enhance</span>
+    } @else {
+      <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+    }
   </button>
 </div>

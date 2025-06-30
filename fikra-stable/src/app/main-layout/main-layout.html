@@ -1,25 +1,42 @@
+<!-- src/app/main-layout/main-layout.html -->
 <mat-toolbar class="app-header">
   <div class="logo-container">
     <img src="assets/Fikra_Logo.png" alt="Fikra App Logo" class="fikra-logo">
     <span i18n="Application name">Fikra</span>
   </div>
+
   <span class="header-spacer"></span>
+
   <a mat-button class="nav-link" routerLink="/stats" i18n="Navigation link to statistics page">
     Statistics
   </a>
+
   <a mat-button class="lang-switcher" [href]="otherLangUrl">
     {{ otherLang }}
   </a>
-  <button mat-icon-button (click)="logout()" i18n-aria-label="Logout button" aria-label="Logout">
-    <mat-icon>logout</mat-icon>
-  </button>
+
+  <!-- NEW: User Menu Button -->
+  @if (currentUser$ | async; as user) {
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+      <mat-icon>person</mat-icon>
+      <span>Welcome, {{ user.username }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  }
+
+  <!-- NEW: The Dropdown Menu Itself -->
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span i18n>Logout</span>
+    </button>
+  </mat-menu>
+  
   <img src="assets/SJC_Logo.png" alt="SJC Logo" class="sjc-logo">
 </mat-toolbar>
 
 <main class="content-area">
-  <section class="submission-section">
-    <app-idea-form (ideaSubmitted)="onIdeaSubmitted()"></app-idea-form>
-  </section>
+  <app-idea-form (ideaSubmitted)="onIdeaSubmitted()"></app-idea-form>
   <section class="dashboard-section">
     <app-dashboard></app-dashboard>
   </section>

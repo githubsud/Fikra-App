@@ -50,6 +50,17 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+# Add this new endpoint to the "User Endpoints" section in main.py
+
+@app.get("/users/me/", response_model=models.UserResponse, tags=["Users"])
+async def read_users_me(
+    current_user: models.User = Depends(security.get_current_active_user)
+):
+    """
+    Fetches the details for the currently logged-in user.
+    """
+    return current_user
+    
 # =================================================================
 # Statistics Endpoint
 # =================================================================

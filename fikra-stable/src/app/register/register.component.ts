@@ -2,16 +2,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // <-- Import the Router
+import { Router } from '@angular/router';
 
 // Import Angular Material Modules
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; // <-- Import SnackBar Module
 
-// Import our AuthService and the UserCreate interface
+// Import our services
 import { AuthService, UserCreate } from '../auth/auth.service';
+import { NotificationService } from '../shared/notification.service'; // <-- Import NotificationService
 
 @Component({
   selector: 'app-register',
@@ -23,6 +25,7 @@ import { AuthService, UserCreate } from '../auth/auth.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule, // <-- Add it to imports
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
@@ -34,30 +37,28 @@ export class RegisterComponent {
     password: ''
   };
 
-  // Inject both the AuthService and Router
   constructor(
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router
   ) { }
 
   register(): void {
     if (!this.registerData.username || !this.registerData.password || !this.registerData.department) {
-      alert('All fields are required!');
+      this.notificationService.show('All fields are required!', 'Close', true);
       return;
     }
 
-    // Call the register method from our service
     this.authService.register(this.registerData).subscribe({
         next: (response) => {
           console.log('Registration successful!', response);
-          alert('Registration successful! Please log in with your new account.');
-          this.router.navigate(['/login']); // Navigate to the login page on success
+          this.notificationService.show('Registration successful! Please log in.');
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Registration failed', err);
-          // Check if the error detail is available
           const detail = err.error?.detail || 'Please try another username.';
-          alert(`Registration failed: ${detail}`);
+          this.notificationService.show(`Registration failed: ${detail}`, 'Close', true);
         }
       });
   }

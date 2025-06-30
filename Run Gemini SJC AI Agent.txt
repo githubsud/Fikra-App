@@ -5,8 +5,8 @@ Run Gemini SJC AI Agent
 (.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>uvicorn main:app --reload
 
 تشغيل النسخة العربية أولا
-(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>ng serve --configuration=ar
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>npx ng serve --configuration=ar
 
 تشغيل النسخة الإنجليزية أولا
-(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>ng serve
+(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra-stable>npx ng serve
 

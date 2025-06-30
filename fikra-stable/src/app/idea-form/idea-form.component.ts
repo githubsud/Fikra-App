@@ -1,10 +1,8 @@
 // src/app/idea-form/idea-form.component.ts
-
 import { Component, Output, EventEmitter, Inject, LOCALE_ID, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// RxJS imports for real-time search
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -13,10 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list'; // For the results list
-import { MatProgressBarModule } from '@angular/material/progress-bar'; // For loading indicator
+import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; // <-- Import SnackBar Module
 
 import { ApiService, IdeaCreate, SimilarIdea } from '../api.service';
+import { NotificationService } from '../shared/notification.service'; // <-- Import NotificationService
 
 declare var webkitSpeechRecognition: any;
 
@@ -31,7 +32,9 @@ declare var webkitSpeechRecognition: any;
     MatIconModule,
     MatButtonModule,
     MatListModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule, // <-- Add it to imports
   ],
   templateUrl: './idea-form.component.html',
   styleUrls: ['./idea-form.component.scss'],
@@ -43,7 +46,6 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
   isRecording: boolean = false;
   isSubmitting: boolean = false;
   
-  // --- NEW PROPERTIES FOR SIMILARITY SEARCH ---
   similarIdeas: SimilarIdea[] = [];
   isSearching: boolean = false;
   private searchText$ = new Subject<string>();
@@ -54,6 +56,7 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
+    private notificationService: NotificationService, // <-- Inject NotificationService
     @Inject(LOCALE_ID) public activeLocale: string,
     private cdr: ChangeDetectorRef
   ) {
@@ -67,13 +70,12 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Set up the real-time search logic
     this.searchSubscription = this.searchText$.pipe(
-      debounceTime(500), // Wait for 500ms after the user stops typing
-      distinctUntilChanged(), // Only search if the text has changed
-      switchMap(text => { // Switch to a new API call, cancelling previous ones
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(text => {
         if (!text || text.length < 10) {
-          this.similarIdeas = []; // Clear results if text is too short
+          this.similarIdeas = [];
           return [];
         }
         this.isSearching = true;
@@ -86,18 +88,16 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up the subscription to prevent memory leaks
     this.searchSubscription.unsubscribe();
   }
 
-  // NEW: This method is called every time the user types
   onSearchTextChange(text: string): void {
     this.searchText$.next(text);
   }
 
   toggleVoiceRecognition() {
     if (!this.recognition) {
-      alert('Speech recognition is not supported in this browser.');
+      this.notificationService.show('Speech recognition is not supported in this browser.', 'Close', true);
       return;
     }
 
@@ -108,18 +108,15 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
     }
 
     this.isRecording = true;
+    this.textBeforeRecording = this.ideaText;
     this.recognition.lang = this.activeLocale;
     this.recognition.start();
 
-    // This event fires every time the microphone detects speech
     this.recognition.onresult = (event: any) => {
       let final_transcript = '';
       let interim_transcript = '';
 
-      // 2. SIMPLIFIED AND MORE ROBUST LOGIC
-      // Iterate through all the results
       for (let i = 0; i < event.results.length; ++i) {
-        // Concatenate the transcripts of all the results
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
         } else {
@@ -127,10 +124,7 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
         }
       }
       
-      // Update the text box with the full transcript so far
-      this.ideaText = final_transcript + interim_transcript;
-      
-      // 3. MANUALLY FORCE ANGULAR TO UPDATE THE SCREEN
+      this.ideaText = this.textBeforeRecording + final_transcript + interim_transcript;
       this.cdr.detectChanges(); 
     };
 
@@ -166,6 +160,7 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
     this.apiService.submitIdea(newIdea).subscribe({
       next: (response: any) => {
         console.log('Submission successful', response);
+        this.notificationService.show('Idea submitted successfully!');
         this.ideaText = '';
         this.isSubmitting = false;
         this.ideaSubmitted.emit();
@@ -173,7 +168,7 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
       error: (err: any) => {
         console.error('Submission failed', err);
         this.isSubmitting = false;
-        alert('There was an error submitting your idea. Please try again.');
+        this.notificationService.show('There was an error submitting your idea. Please try again.', 'Close', true);
       }
     });
   }
