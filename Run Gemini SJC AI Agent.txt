@@ -1,5 +1,8 @@
 Run Gemini SJC AI Agent
 
+To activate your virtual environment:
+C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend\.venv\Scripts\activate
+
 (.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>set GEMINI_API_KEY=AIzaSyCrFozUJ6mDfMRvgQGbL9DQm-b5zaosjP0
 
 (.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>uvicorn main:app --reload

@@ -1,6 +1,6 @@
 # fikra-backend/main.py
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Response # <-- Import Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Annotated
@@ -10,6 +10,7 @@ import json
 
 import models, crud, gemini_client, security
 from database import engine, get_db
+import pdf_generator # <-- Import our new PDF generator
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -77,32 +78,18 @@ def create_idea_endpoint(
     current_user: models.User = Depends(security.get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Creates a new idea, generates all AI data including the embedding and keywords,
-    and saves it to the database.
-    """
-    # Call Gemini API for classification, enhancement, embedding, and keywords
     classification = gemini_client.classify_idea(idea.original_text, language=idea.language)
     enhanced_text = gemini_client.enhance_idea(idea.original_text, language=idea.language)
     embedding = gemini_client.generate_embedding(idea.original_text)
-    tags = gemini_client.extract_keywords(enhanced_text, language=idea.language) # <-- NEW: Extract keywords
+    tags = gemini_client.extract_keywords(enhanced_text, language=idea.language)
     
-    # Create the idea in the database, now including the embedding and tags
     db_idea = crud.create_idea(
-        db=db, 
-        idea=idea, 
-        user_id=current_user.id, 
-        classification=classification, 
-        enhanced_text=enhanced_text,
-        embedding=embedding,
-        tags=tags # <-- NEW: Pass the keywords to be saved
+        db=db, idea=idea, user_id=current_user.id, classification=classification, enhanced_text=enhanced_text, embedding=embedding, tags=tags
     )
     
-    # Manually construct response to ensure all data is loaded correctly
     idea_response = models.IdeaResponse.model_validate(db_idea)
     idea_response.vote_count = len(db_idea.votes)
     return idea_response
-
 
 @app.post("/ideas/find-similar", response_model=List[models.SimilarIdeaResponse], tags=["Ideas"])
 def find_similar_ideas_endpoint(
@@ -135,6 +122,27 @@ def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(g
     return results
 
 # =================================================================
+# NEW: PDF Export Endpoint
+# =================================================================
+@app.get("/ideas/{idea_id}/export-pdf", tags=["Ideas"])
+def export_idea_pdf(idea_id: int, db: Session = Depends(get_db)):
+    """
+    Generates a PDF report for a specific idea.
+    """
+    # We need to fetch the specific idea with its owner relationship loaded
+    idea = db.query(models.Idea).filter(models.Idea.id == idea_id).first()
+    if not idea:
+        raise HTTPException(status_code=404, detail="Idea not found")
+
+    pdf_bytes = pdf_generator.create_proposal_pdf(idea)
+    
+    headers = {
+        'Content-Disposition': f'attachment; filename="idea_proposal_{idea_id}.pdf"'
+    }
+    return Response(content=pdf_bytes, media_type='application/pdf', headers=headers)
+
+
+# =================================================================
 # Voting and Commenting Endpoints
 # =================================================================
 @app.post("/ideas/{idea_id}/vote", status_code=200, tags=["Ideas"])
@@ -153,3 +161,21 @@ def create_comment_for_idea(
     db: Session = Depends(get_db)
 ):
     return crud.create_idea_comment(db=db, comment=comment, idea_id=idea_id, user_id=current_user.id)
+
+# In fikra-backend/main.py
+
+@app.get("/ideas/{idea_id}/export-pdf", tags=["Ideas"])
+def export_idea_pdf(idea_id: int, db: Session = Depends(get_db)):
+    # ... (code to fetch the idea is here) ...
+    if not idea:
+        raise HTTPException(status_code=404, detail="Idea not found")
+
+    pdf_bytes = pdf_generator.create_proposal_pdf(idea)
+
+    # ADD THIS DEBUG LINE
+    print(f"--- PDF Generator returned object of type: {type(pdf_bytes)} ---")
+
+    headers = {
+        'Content-Disposition': f'attachment; filename="idea_proposal_{idea_id}.pdf"'
+    }
+    return Response(content=pdf_bytes, media_type='application/pdf', headers=headers)
