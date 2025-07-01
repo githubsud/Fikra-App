@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from pydantic import BaseModel, ConfigDict
 import datetime
+from typing import List, Optional # <-- Import Optional
 
 from database import Base
 
@@ -13,34 +14,31 @@ from database import Base
 # =================================================================
 class User(Base):
     __tablename__ = "users"
-
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     department = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-
     ideas = relationship("Idea", back_populates="owner")
     comments = relationship("Comment", back_populates="owner")
     votes = relationship("Vote", back_populates="owner")
 
 
 # =================================================================
-# Idea Model (with new embedding column)
+# Idea Model (with new tags column)
 # =================================================================
 class Idea(Base):
     __tablename__ = "ideas"
-
     id = Column(Integer, primary_key=True, index=True)
     submission_date = Column(DateTime(timezone=True), server_default=func.now())
     original_text = Column(Text, nullable=False)
     language = Column(String, default='en')
     ai_classification = Column(String, nullable=True)
     ai_enhanced_text = Column(Text, nullable=True)
-    embedding = Column(Text, nullable=True)  # <-- NEW: To store the vector as a JSON string
+    embedding = Column(Text, nullable=True)
+    tags = Column(Text, nullable=True) # <-- NEW: To store keywords as a JSON string
     
     owner_id = Column(Integer, ForeignKey("users.id"))
-
     owner = relationship("User", back_populates="ideas")
     comments = relationship("Comment", back_populates="idea", cascade="all, delete-orphan")
     votes = relationship("Vote", back_populates="idea", cascade="all, delete-orphan")
@@ -75,15 +73,8 @@ class Comment(Base):
 class UserBase(BaseModel):
     username: str
     department: str
-
 class UserCreate(UserBase):
     password: str
-
-class UserInDB(UserBase):
-    id: int
-    is_active: bool
-    model_config = ConfigDict(from_attributes=True)
-
 class UserResponse(UserBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
@@ -95,10 +86,8 @@ class TokenData(BaseModel):
 # --- Comment Schemas ---
 class CommentBase(BaseModel):
     text: str
-
 class CommentCreate(CommentBase):
     pass
-
 class CommentResponse(CommentBase):
     id: int
     submission_date: datetime.datetime
@@ -109,7 +98,6 @@ class CommentResponse(CommentBase):
 class IdeaCreate(BaseModel):
     original_text: str
     language: str
-
 class IdeaResponse(BaseModel):
     id: int
     submission_date: datetime.datetime
@@ -120,21 +108,18 @@ class IdeaResponse(BaseModel):
     owner: UserResponse
     comments: list[CommentResponse] = []
     vote_count: int = 0
+    tags: Optional[str] = None # <-- NEW: Add tags to the response model
     model_config = ConfigDict(from_attributes=True)
 
-# --- Statistics Schemas ---
+# --- Statistics & Similarity Schemas ---
 class StatItem(BaseModel):
     name: str
     value: int
-
 class StatsResponse(BaseModel):
     ideas_by_department: list[StatItem]
     ideas_by_classification: list[StatItem]
-
-
 class FindSimilarRequest(BaseModel):
     text: str
-
 class SimilarIdeaResponse(BaseModel):
     id: int
     original_text: str

@@ -8,8 +8,6 @@ import numpy as np
 import models
 import security
 
-# (Your existing User, Idea, Vote, Comment, and Stats functions remain here...)
-# ...
 # =================================================================
 # User CRUD Functions
 # =================================================================
@@ -47,14 +45,16 @@ def get_ideas(db: Session, skip: int = 0, limit: int = 100):
         .all()
     )
 
-def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classification: str, enhanced_text: str, embedding: list[float]):
+# UPDATED create_idea function to accept the new tags data
+def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classification: str, enhanced_text: str, embedding: list[float], tags: list[str]):
     db_idea = models.Idea(
         original_text=idea.original_text,
         language=idea.language,
         owner_id=user_id,
         ai_classification=classification,
         ai_enhanced_text=enhanced_text,
-        embedding=json.dumps(embedding)
+        embedding=json.dumps(embedding),
+        tags=json.dumps(tags) # Convert the list of keywords to a JSON string for storage
     )
     db.add(db_idea)
     db.commit()
@@ -62,11 +62,10 @@ def create_idea(db: Session, idea: models.IdeaCreate, user_id: int, classificati
     return db_idea
 
 # =================================================================
-# Similarity Search Function (with Threshold)
+# Similarity Search Function
 # =================================================================
 
 def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5):
-    """Finds the most similar ideas based on embedding vectors."""
     all_ideas = db.query(models.Idea).filter(models.Idea.embedding.isnot(None)).all()
     
     if not all_ideas:
@@ -74,8 +73,7 @@ def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5
 
     query_vector = np.array(query_embedding)
     
-    # Define a minimum similarity score to be considered a match
-    similarity_threshold = 0.7  # This means 70% similar. You can adjust this value.
+    similarity_threshold = 0.7
     
     similarities = []
     for idea in all_ideas:
@@ -87,15 +85,10 @@ def find_similar_ideas(db: Session, query_embedding: list[float], top_k: int = 5
         
         if norm_query > 0 and norm_idea > 0:
             similarity = dot_product / (norm_query * norm_idea)
-            
-            # NEW: Only add the idea if it meets our threshold
             if similarity > similarity_threshold:
                 similarities.append((idea, similarity))
 
-    # Sort by similarity score in descending order
     similarities.sort(key=lambda x: x[1], reverse=True)
-
-    # Return the top N most similar ideas
     return similarities[:top_k]
 
 
@@ -128,6 +121,7 @@ def create_idea_comment(db: Session, comment: models.CommentCreate, idea_id: int
     db.commit()
     db.refresh(db_comment)
     return db_comment
+
 # =================================================================
 # Statistics CRUD Functions
 # =================================================================

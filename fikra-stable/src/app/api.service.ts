@@ -27,9 +27,9 @@ export interface Idea {
   owner: User;
   comments: Comment[];
   vote_count: number;
+  tags: string | null; // <-- NEW: Add tags property
 }
 
-// --- NEW: INTERFACE FOR SIMILAR IDEAS ---
 export interface SimilarIdea {
   id: number;
   original_text: string;
@@ -73,7 +73,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/ideas/`, idea);
   }
 
-  // --- NEW: SIMILARITY SEARCH METHOD ---
+  // --- Similarity Search Method ---
   findSimilarIdeas(text: string): Observable<SimilarIdea[]> {
     return this.http.post<SimilarIdea[]>(`${this.apiUrl}/ideas/find-similar`, { text });
   }

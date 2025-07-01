@@ -114,3 +114,21 @@ h2 {
     color: rgba(0, 0, 0, 0.87); // Standard dark text color
   }
 }
+
+.mat-mdc-chip-set {
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.mat-mdc-chip {
+  // استخدم ألوان السمة الخاصة بك
+  --mdc-chip-label-text-color: var(--fikra-orange);
+  --mdc-chip-container-color: rgba(243, 156, 18, 0.15);
+  --mat-mdc-chip-focus-state-layer-color: var(--fikra-orange);
+}
+
+// نمط للرقاقة المحددة (النشطة)
+.mat-mdc-chip.mat-mdc-chip-selected {
+  --mdc-chip-label-text-color: #000;
+  --mdc-chip-container-color: var(--fikra-orange);
+}

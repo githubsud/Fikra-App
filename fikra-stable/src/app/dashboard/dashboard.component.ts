@@ -1,15 +1,16 @@
 // src/app/dashboard/dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- For the comment form
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon'; // <-- For icons
-import { MatButtonModule } from '@angular/material/button'; // <-- For buttons
-import { MatDividerModule } from '@angular/material/divider'; // <-- For dividers
-import { MatExpansionModule } from '@angular/material/expansion'; // <-- For the accordion
-import { MatListModule } from '@angular/material/list'; // <-- For the comment list
-import { MatFormFieldModule } from '@angular/material/form-field'; // <-- For the comment input
-import { MatInputModule } from '@angular/material/input'; // <-- For the comment input
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips'; // <-- This is the module for chips
 import { MarkdownModule } from 'ngx-markdown';
 import { ApiService, Idea, CommentCreate } from '../api.service';
 
@@ -28,15 +29,17 @@ import { ApiService, Idea, CommentCreate } from '../api.service';
     MatListModule,
     MatFormFieldModule,
     MatInputModule,
-    MarkdownModule
+    MarkdownModule,
+    MatChipsModule // <-- It must be included here
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
 export class DashboardComponent implements OnInit {
-  public ideas: Idea[] = [];
-  // This object will hold the new comment text for each idea card
+  public allIdeas: Idea[] = [];
+  public filteredIdeas: Idea[] = [];
   public newCommentText: { [ideaId: number]: string } = {};
+  public activeTag: string | null = null;
 
   constructor(private apiService: ApiService) { }
 
@@ -47,38 +50,57 @@ export class DashboardComponent implements OnInit {
   loadIdeas(): void {
     this.apiService.getIdeas().subscribe({
       next: (data: Idea[]) => {
-        this.ideas = data;
+        this.allIdeas = data;
+        this.applyFilter(); // Apply current filter or show all
       },
       error: (err: any) => console.error('Failed to load ideas', err)
     });
   }
 
-  // NEW: Method to handle voting
+  parseTags(tagsJson: string | null): string[] {
+    if (!tagsJson) return [];
+    try {
+      return JSON.parse(tagsJson);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  filterByTag(tag: string): void {
+    if (this.activeTag === tag) {
+      this.activeTag = null; // Deselect if clicked again
+    } else {
+      this.activeTag = tag;
+    }
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    if (this.activeTag) {
+      this.filteredIdeas = this.allIdeas.filter(idea => {
+        const ideaTags = this.parseTags(idea.tags);
+        return ideaTags.includes(this.activeTag!);
+      });
+    } else {
+      this.filteredIdeas = this.allIdeas; // No tag selected, show all
+    }
+  }
+
   addVote(idea: Idea): void {
     this.apiService.addVote(idea.id).subscribe({
-      next: () => {
-        // For an instant UI update, we can reload all ideas.
-        // A more advanced version might just update the single idea.
-        this.loadIdeas();
-      },
+      next: () => this.loadIdeas(),
       error: (err) => console.error(`Failed to vote for idea ${idea.id}`, err)
     });
   }
 
-  // NEW: Method to handle adding a comment
   addComment(idea: Idea): void {
     const commentText = this.newCommentText[idea.id];
-    if (!commentText || commentText.trim() === '') {
-      return; // Don't submit empty comments
-    }
+    if (!commentText || commentText.trim() === '') return;
 
     const newComment: CommentCreate = { text: commentText };
-
     this.apiService.addComment(idea.id, newComment).subscribe({
       next: (addedComment) => {
-        // Add the new comment to the list for an instant UI update
         idea.comments.push(addedComment);
-        // Clear the input box
         this.newCommentText[idea.id] = '';
       },
       error: (err) => console.error(`Failed to add comment for idea ${idea.id}`, err)

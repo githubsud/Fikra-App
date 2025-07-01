@@ -1,6 +1,7 @@
 # fikra-backend/gemini_client.py
 import google.generativeai as genai
 import os
+import re
 
 # Configure the API key securely
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -50,15 +51,36 @@ def enhance_idea(idea_text: str, language: str) -> str:
     response = generation_model.generate_content(prompt)
     return response.text.strip()
 
-# =================================================================
-# NEW: Function to Generate Embeddings
-# =================================================================
 def generate_embedding(text: str):
     """Generates an embedding vector for a given piece of text."""
-    # We use a specific model optimized for creating embeddings.
     result = genai.embed_content(
         model="models/text-embedding-004",
         content=text,
         task_type="RETRIEVAL_DOCUMENT"
     )
     return result['embedding']
+
+# =================================================================
+# NEW: Function to Extract Keywords
+# =================================================================
+def extract_keywords(text: str, language: str, count: int = 5) -> list[str]:
+    """Extracts a specified number of keywords from a block of text."""
+    lang_name = get_language_name(language)
+    prompt = f"""
+    Analyze the following text. Identify the {count} most important and relevant keywords or concepts.
+    Your entire response MUST be in {lang_name} only.
+    Return the keywords as a single, comma-separated list and nothing else.
+
+    Example: Keyword One, Keyword Two, Keyword Three
+
+    Text: "{text}"
+    """
+    try:
+        response = generation_model.generate_content(prompt)
+        # Clean up the response: split by comma, strip whitespace from each keyword
+        keywords = [keyword.strip() for keyword in response.text.split(',')]
+        return keywords
+    except Exception as e:
+        print(f"Error extracting keywords: {e}")
+        return []
+
