@@ -27,7 +27,7 @@ export interface Idea {
   owner: User;
   comments: Comment[];
   vote_count: number;
-  tags: string | null; // <-- NEW: Add tags property
+  tags: string | null;
 }
 
 export interface SimilarIdea {
@@ -73,7 +73,6 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/ideas/`, idea);
   }
 
-  // --- Similarity Search Method ---
   findSimilarIdeas(text: string): Observable<SimilarIdea[]> {
     return this.http.post<SimilarIdea[]>(`${this.apiUrl}/ideas/find-similar`, { text });
   }
@@ -90,5 +89,13 @@ export class ApiService {
 
   addComment(ideaId: number, commentData: CommentCreate): Observable<Comment> {
     return this.http.post<Comment>(`${this.apiUrl}/ideas/${ideaId}/comments`, commentData);
+  }
+
+  // --- NEW: PDF EXPORT METHOD ---
+  exportIdeaPdf(ideaId: number): Observable<Blob> {
+    // We expect the response to be a 'blob' (a file) not JSON text.
+    return this.http.get(`${this.apiUrl}/ideas/${ideaId}/export-pdf`, {
+      responseType: 'blob'
+    });
   }
 }

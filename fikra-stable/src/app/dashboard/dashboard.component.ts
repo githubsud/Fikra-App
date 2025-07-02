@@ -10,9 +10,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips'; // <-- This is the module for chips
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { ApiService, Idea, CommentCreate } from '../api.service';
+import { NotificationService } from '../shared/notification.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,10 +32,11 @@ import { ApiService, Idea, CommentCreate } from '../api.service';
     MatFormFieldModule,
     MatInputModule,
     MarkdownModule,
-    MatChipsModule // <-- It must be included here
+    MatChipsModule,
+    MatTooltipModule
   ],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss']
+  styleUrls: ['./dashboard.scss'] // <-- THIS PATH IS NOW CORRECT
 })
 export class DashboardComponent implements OnInit {
   public allIdeas: Idea[] = [];
@@ -41,7 +44,10 @@ export class DashboardComponent implements OnInit {
   public newCommentText: { [ideaId: number]: string } = {};
   public activeTag: string | null = null;
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
     this.loadIdeas();
@@ -51,7 +57,7 @@ export class DashboardComponent implements OnInit {
     this.apiService.getIdeas().subscribe({
       next: (data: Idea[]) => {
         this.allIdeas = data;
-        this.applyFilter(); // Apply current filter or show all
+        this.applyFilter();
       },
       error: (err: any) => console.error('Failed to load ideas', err)
     });
@@ -67,22 +73,17 @@ export class DashboardComponent implements OnInit {
   }
 
   filterByTag(tag: string): void {
-    if (this.activeTag === tag) {
-      this.activeTag = null; // Deselect if clicked again
-    } else {
-      this.activeTag = tag;
-    }
+    this.activeTag = this.activeTag === tag ? null : tag;
     this.applyFilter();
   }
 
   applyFilter(): void {
     if (this.activeTag) {
-      this.filteredIdeas = this.allIdeas.filter(idea => {
-        const ideaTags = this.parseTags(idea.tags);
-        return ideaTags.includes(this.activeTag!);
-      });
+      this.filteredIdeas = this.allIdeas.filter(idea => 
+        this.parseTags(idea.tags).includes(this.activeTag!)
+      );
     } else {
-      this.filteredIdeas = this.allIdeas; // No tag selected, show all
+      this.filteredIdeas = this.allIdeas;
     }
   }
 
@@ -104,6 +105,26 @@ export class DashboardComponent implements OnInit {
         this.newCommentText[idea.id] = '';
       },
       error: (err) => console.error(`Failed to add comment for idea ${idea.id}`, err)
+    });
+  }
+
+  exportPdf(idea: Idea): void {
+    this.notificationService.show('Generating PDF...');
+    this.apiService.exportIdeaPdf(idea.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `idea_proposal_${idea.id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      },
+      error: (err) => {
+        console.error(`Failed to export PDF for idea ${idea.id}`, err);
+        this.notificationService.show('Failed to generate PDF.', 'Close', true);
+      }
     });
   }
 }
