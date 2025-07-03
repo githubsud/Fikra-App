@@ -1,0 +1,18 @@
+# This file tells gcloud to ignore these files and folders when deploying.
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual Environment
+.venv/
+
+# Database file - we will use a fresh one in the cloud
+fikra_app.db
+
+# Git files
+.git
+.gitignore

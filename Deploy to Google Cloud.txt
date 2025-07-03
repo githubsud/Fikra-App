@@ -1,0 +1,49 @@
+Phase 1: Preparing Your Environment
+Before we can deploy anything, you need to have your Google Cloud project ready and the command-line tools installed on your office laptop.
+Step 1: Confirm Your Google Cloud Project
+
+Go to the Google Cloud Console.
+
+Make sure you have a project selected. If not, create a new one (e.g., fikra-sjc-app).
+
+Important: Make sure billing is enabled for this project. Google Cloud has a generous free tier, and your demo application will almost certainly not incur any charges, but billing must be enabled to use services like Cloud Run.
+
+Step 2: Install and Configure the gcloud CLI
+
+The gcloud command-line interface is the main tool for interacting with your Google Cloud account. If you haven't installed it on your office machine, please follow the official guide now: Install the gcloud CLI
+
+In the new terminal, run these two commands to log in and set your project:
+
+Bash
+
+gcloud auth login
+(This will open a browser window for you to log in to your Google account.)
+
+Bash
+
+gcloud config set project YOUR_PROJECT_ID
+
+Enable Required Cloud Services
+Before we can deploy anything, we need to "turn on" the specific Google Cloud services we plan to use. You do this by running two commands in your terminal.
+
+Open a new terminal or navigate back to your main project folder:
+C:\AI\SJC AI Agent Competition\Gemini\Fikra
+
+Run the following command to enable Cloud Run (which will host your backend):
+
+Bash
+
+gcloud services enable run.googleapis.com
+
+After that finishes, run this command to enable Cloud Build (which automatically builds your application for deployment):
+
+Bash
+
+gcloud services enable cloudbuild.googleapis.com
+
+Now we move on to the next major phase: preparing your backend application to be deployed.
+
+To run your FastAPI application on Google Cloud Run, we need to package it into a container. Think of a container as a standardized, self-sufficient box that holds your Python code, all its dependencies (like FastAPI and SQLAlchemy), and instructions on how to run it. The technology used to create these containers is called Docker.
+
+Our first step is to create a special instruction file called a Dockerfile.
+

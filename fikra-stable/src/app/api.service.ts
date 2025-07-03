@@ -60,8 +60,8 @@ export interface StatsResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://127.0.0.1:8000';
-
+  //private apiUrl = 'http://127.0.0.1:8000';
+  private apiUrl = 'https://fikra-backend-service-286213711072.asia-south1.run.app';
   constructor(private http: HttpClient) { }
 
   // --- Idea Methods ---
