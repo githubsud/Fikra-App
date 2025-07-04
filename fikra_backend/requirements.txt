@@ -1,11 +1,12 @@
 # FastAPI and Server
 fastapi==0.115.12
 uvicorn==0.34.3
-gunicorn # <-- This was the missing package
+gunicorn
 
 # Database
 SQLAlchemy==2.0.41
 psycopg2-binary==2.9.10
+# We keep psycopg2-binary for potential future use with Cloud SQL (PostgreSQL)
 
 # Security
 passlib[bcrypt]

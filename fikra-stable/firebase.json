@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/fikra-stable/browser",
+    "public": "dist/fikra-stable",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -8,8 +8,12 @@
     ],
     "rewrites": [
       {
+        "source": "/en-US{,/**}",
+        "destination": "/en-US/index.html"
+      },
+      {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/ar/index.html"
       }
     ]
   }

@@ -14,10 +14,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar'; // <-- Import SnackBar Module
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ApiService, IdeaCreate, SimilarIdea } from '../api.service';
-import { NotificationService } from '../shared/notification.service'; // <-- Import NotificationService
+import { NotificationService } from '../shared/notification.service';
 
 declare var webkitSpeechRecognition: any;
 
@@ -34,7 +34,7 @@ declare var webkitSpeechRecognition: any;
     MatListModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule, // <-- Add it to imports
+    MatSnackBarModule,
   ],
   templateUrl: './idea-form.component.html',
   styleUrls: ['./idea-form.component.scss'],
@@ -56,7 +56,7 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private notificationService: NotificationService, // <-- Inject NotificationService
+    private notificationService: NotificationService,
     @Inject(LOCALE_ID) public activeLocale: string,
     private cdr: ChangeDetectorRef
   ) {
@@ -96,8 +96,10 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
   }
 
   toggleVoiceRecognition() {
+    const isArabic = this.activeLocale.startsWith('ar');
     if (!this.recognition) {
-      this.notificationService.show('Speech recognition is not supported in this browser.', 'Close', true);
+      const message = isArabic ? 'التعرف على الكلام غير مدعوم في هذا المتصفح.' : 'Speech recognition is not supported in this browser.';
+      this.notificationService.show(message, 'Close', true);
       return;
     }
 
@@ -157,10 +159,12 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
       language: languageCode
     };
 
+    const isArabic = this.activeLocale.startsWith('ar');
+
     this.apiService.submitIdea(newIdea).subscribe({
       next: (response: any) => {
-        console.log('Submission successful', response);
-        this.notificationService.show('Idea submitted successfully!');
+        const message = isArabic ? 'تم تقديم الفكرة بنجاح!' : 'Idea submitted successfully!';
+        this.notificationService.show(message);
         this.ideaText = '';
         this.isSubmitting = false;
         this.ideaSubmitted.emit();
@@ -168,7 +172,8 @@ export class IdeaFormComponent implements OnInit, OnDestroy {
       error: (err: any) => {
         console.error('Submission failed', err);
         this.isSubmitting = false;
-        this.notificationService.show('There was an error submitting your idea. Please try again.', 'Close', true);
+        const message = isArabic ? 'حدث خطأ أثناء تقديم فكرتك. يرجى المحاولة مرة أخرى.' : 'There was an error submitting your idea. Please try again.';
+        this.notificationService.show(message, 'Close', true);
       }
     });
   }
