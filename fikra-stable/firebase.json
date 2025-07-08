@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/fikra-stable",
+    "public": "dist/fikra-stable/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -8,12 +8,15 @@
     ],
     "rewrites": [
       {
-        "source": "/en-US{,/**}",
-        "destination": "/en-US/index.html"
+        "source": "/api/**",
+        "run": {
+          "serviceId": "fikra-backend-v2",
+          "region": "asia-south1"
+        }
       },
       {
         "source": "**",
-        "destination": "/ar/index.html"
+        "destination": "/index.html"
       }
     ]
   }

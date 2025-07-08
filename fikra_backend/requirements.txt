@@ -5,11 +5,11 @@ gunicorn
 
 # Database
 SQLAlchemy==2.0.41
-psycopg2-binary==2.9.10
-# We keep psycopg2-binary for potential future use with Cloud SQL (PostgreSQL)
+pg8000 # <-- This is the correct package name for the PostgreSQL driver
 
-# Security
-passlib[bcrypt]
+# Security (Pinned versions for stability)
+passlib==1.7.4
+bcrypt==4.1.3
 python-jose[cryptography]
 
 # AI and Data

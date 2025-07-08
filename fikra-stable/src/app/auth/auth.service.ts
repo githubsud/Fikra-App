@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../environments/environment'; // <-- Import environment
 
 export interface UserCreate { username: string; department: string; password: string; }
 export interface User { id: number; username: string; department: string; }
@@ -10,7 +11,7 @@ export interface User { id: number; username: string; department: string; }
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000'; // <-- Reverted to localhost
+  private apiUrl = environment.apiUrl; // <-- Use the variable here
   public currentUser = new BehaviorSubject<User | null>(null);
 
   constructor(private http: HttpClient) { }

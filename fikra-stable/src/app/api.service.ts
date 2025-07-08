@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment'; // <-- Import environment
 
 // --- (Interfaces remain the same) ---
 export interface User { id: number; username: string; }
@@ -17,7 +18,7 @@ export interface StatsResponse { ideas_by_department: StatItem[]; ideas_by_class
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://127.0.0.1:8000'; // <-- Reverted to localhost
+  private apiUrl = environment.apiUrl; // <-- Use the variable here
 
   constructor(private http: HttpClient) { }
 

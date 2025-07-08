@@ -6,18 +6,28 @@ from sqlalchemy.orm import Session
 from typing import List, Annotated
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
-import json
+from contextlib import asynccontextmanager
 
 import models, crud, gemini_client, security
 from database import engine, get_db
 import pdf_generator
 
-models.Base.metadata.create_all(bind=engine)
+def create_db_and_tables():
+    print("--- Lifespan event: Creating database tables... ---")
+    try:
+        models.Base.metadata.create_all(bind=engine)
+        print("--- Lifespan event: Database tables created successfully. ---")
+    except Exception as e:
+        print(f"--- Lifespan event: An error occurred during table creation: {e} ---")
 
-app = FastAPI(title="Fikra SJC Agent")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
 
-# THIS IS THE MOST IMPORTANT PART.
-# This tells the server to accept requests from any website.
+# THIS IS THE CORRECTED LINE FOR LOCAL DEVELOPMENT
+app = FastAPI(title="Fikra SJC Agent", lifespan=lifespan, root_path="/api")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -66,7 +76,7 @@ async def read_users_me(current_user: models.User = Depends(security.get_current
     return current_user
 
 # =================================================================
-# Statistics Endpoint
+# All other endpoints (Stats, Ideas, etc.) remain the same
 # =================================================================
 @app.get("/stats/", response_model=models.StatsResponse, tags=["Statistics"])
 def get_stats(db: Session = Depends(get_db)):
@@ -76,9 +86,6 @@ def get_stats(db: Session = Depends(get_db)):
     class_stats = [{"name": name, "value": value} for name, value in class_stats_raw]
     return { "ideas_by_department": dept_stats, "ideas_by_classification": class_stats }
 
-# =================================================================
-# Idea Endpoints
-# =================================================================
 @app.post("/ideas/", response_model=models.IdeaResponse, status_code=201, tags=["Ideas"])
 def create_idea_endpoint(
     idea: models.IdeaCreate,
@@ -101,14 +108,10 @@ def find_similar_ideas_endpoint(
     request: models.FindSimilarRequest,
     db: Session = Depends(get_db)
 ):
-    if not request.text or not request.text.strip():
-        return []
+    if not request.text or not request.text.strip(): return []
     query_embedding = gemini_client.generate_embedding(request.text)
     similar_ideas = crud.find_similar_ideas(db, query_embedding)
-    response = [
-        {"id": idea.id, "original_text": idea.original_text, "similarity": score}
-        for idea, score in similar_ideas
-    ]
+    response = [{"id": idea.id, "original_text": idea.original_text, "similarity": score} for idea, score in similar_ideas]
     return response
 
 @app.get("/ideas/", response_model=List[models.IdeaResponse], tags=["Ideas"])
@@ -124,28 +127,19 @@ def read_ideas_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(g
 @app.get("/ideas/{idea_id}/export-pdf", tags=["Ideas"])
 def export_idea_pdf(idea_id: int, db: Session = Depends(get_db)):
     idea = db.query(models.Idea).filter(models.Idea.id == idea_id).first()
-    if not idea:
-        raise HTTPException(status_code=404, detail="Idea not found")
+    if not idea: raise HTTPException(status_code=404, detail="Idea not found")
     pdf_bytes = pdf_generator.create_proposal_pdf(idea)
     headers = {'Content-Disposition': f'attachment; filename="idea_proposal_{idea_id}.pdf"'}
     return Response(content=pdf_bytes, media_type='application/pdf', headers=headers)
 
-# =================================================================
-# Voting and Commenting Endpoints
-# =================================================================
 @app.post("/ideas/{idea_id}/vote", status_code=200, tags=["Ideas"])
 def vote_for_idea(
-    idea_id: int,
-    current_user: models.User = Depends(security.get_current_active_user),
-    db: Session = Depends(get_db)
+    idea_id: int, current_user: models.User = Depends(security.get_current_active_user), db: Session = Depends(get_db)
 ):
     return crud.add_or_remove_vote(db=db, idea_id=idea_id, user_id=current_user.id)
 
 @app.post("/ideas/{idea_id}/comments", response_model=models.CommentResponse, status_code=201, tags=["Ideas"])
 def create_comment_for_idea(
-    idea_id: int,
-    comment: models.CommentCreate,
-    current_user: models.User = Depends(security.get_current_active_user),
-    db: Session = Depends(get_db)
+    idea_id: int, comment: models.CommentCreate, current_user: models.User = Depends(security.get_current_active_user), db: Session = Depends(get_db)
 ):
     return crud.create_idea_comment(db=db, comment=comment, idea_id=idea_id, user_id=current_user.id)

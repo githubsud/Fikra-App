@@ -13,12 +13,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
-      "i18n": {
-        "sourceLocale": "en-US",
-        "locales": {
-          "ar": "src/locale/messages.ar.xlf"
-        }
-      },
+        "i18n": {
+          "sourceLocale": "en-US",
+          "locales": {
+            "ar": "src/locale/messages.ar.xlf"
+          }
+        },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -42,6 +42,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
