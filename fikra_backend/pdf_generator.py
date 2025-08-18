@@ -5,12 +5,12 @@ from io import BytesIO
 import models
 import arabic_reshaper
 from bidi.algorithm import get_display
-import os
+from pathlib import Path
 
-# Define absolute paths for assets inside the container
-APP_DIR = "/app/"
-LOGO_PATH = os.path.join(APP_DIR, "assets", "SJC_Logo.png")
-FONT_PATH = os.path.join(APP_DIR, "assets", "Amiri-Regular.ttf")
+# Define the path to the assets directory relative to this file.
+ASSETS_DIR = Path(__file__).parent / "assets"
+LOGO_PATH = ASSETS_DIR / "SJC_Logo.png"
+FONT_PATH = ASSETS_DIR / "Amiri-Regular.ttf"
 
 class PDF(FPDF):
     def header(self):
@@ -28,6 +28,23 @@ class PDF(FPDF):
         self.set_font('helvetica', 'I', 8)
         self.cell(0, 10, f'Page {self.page_no()}', border=0, align='C')
 
+# NEW: Helper function to manually wrap text
+def get_wrapped_text(pdf, text):
+    lines = []
+    # Split the original text into paragraphs
+    for paragraph in text.split('\n'):
+        words = paragraph.split()
+        current_line = ""
+        for word in words:
+            # Check if adding the next word exceeds the page width
+            if pdf.get_string_width(current_line + " " + word) < (pdf.w - pdf.l_margin - pdf.r_margin):
+                current_line += " " + word
+            else:
+                lines.append(current_line.strip())
+                current_line = word
+        lines.append(current_line.strip())
+    return lines
+
 def create_proposal_pdf(idea: models.Idea):
     pdf = PDF()
     
@@ -42,28 +59,34 @@ def create_proposal_pdf(idea: models.Idea):
     is_arabic = idea.language.lower().startswith('ar')
 
     if is_arabic:
+        # --- Idea Title ---
         pdf.set_font('Amiri', '', 24)
-        reshaped_title = arabic_reshaper.reshape(idea.original_text)
-        bidi_title = get_display(reshaped_title)
-        title_lines = pdf.multi_cell(w=0, h=12, text=bidi_title, align='R', split_only=True)
+        # Manually wrap, then process and draw each line
+        title_lines = get_wrapped_text(pdf, idea.original_text)
         for line in title_lines:
-            pdf.cell(0, 12, line, align='R', ln=1)
+            reshaped_line = arabic_reshaper.reshape(line)
+            bidi_line = get_display(reshaped_line)
+            pdf.cell(0, 12, bidi_line, align='R', ln=1)
         pdf.ln(5)
 
+        # --- Submitter Info ---
         pdf.set_font('Amiri', '', 10)
         submitted_by_text = f"Submitted by: {idea.owner.username} (Department: {idea.owner.department})"
         reshaped_submitter = arabic_reshaper.reshape(submitted_by_text)
         bidi_submitter = get_display(reshaped_submitter)
-        pdf.multi_cell(0, 10, bidi_submitter, border=0, align='R')
+        pdf.cell(0, 10, bidi_submitter, align='R', ln=1)
         pdf.ln(15)
 
+        # --- Enhanced Proposal Body ---
         pdf.set_font('Amiri', '', 12)
-        reshaped_body = arabic_reshaper.reshape(idea.ai_enhanced_text)
-        bidi_body = get_display(reshaped_body)
-        body_lines = pdf.multi_cell(w=0, h=10, text=bidi_body, align='R', split_only=True)
+        # Manually wrap, then process and draw each line
+        body_lines = get_wrapped_text(pdf, idea.ai_enhanced_text)
         for line in body_lines:
-            pdf.cell(0, 10, line, align='R', ln=1)
-    else:
+            reshaped_line = arabic_reshaper.reshape(line)
+            bidi_line = get_display(reshaped_line)
+            pdf.cell(0, 10, bidi_line, align='R', ln=1)
+
+    else: # For English, write as before
         pdf.set_font('helvetica', '', 24)
         pdf.multi_cell(0, 12, idea.original_text, border=0, align='L')
         pdf.ln(5)

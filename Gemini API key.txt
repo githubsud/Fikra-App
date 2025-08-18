@@ -1,8 +1,0 @@
-Gemini API key
-
-AIzaSyCrFozUJ6mDfMRvgQGbL9DQm-b5zaosjP0
-
-set GEMINI_API_KEY=AIzaSyCrFozUJ6mDfMRvgQGbL9DQm-b5zaosjP0
-
-(.venv) C:\AI\SJC AI Agent Competition\Gemini\Fikra\fikra_backend>set GEMINI_API_KEY=AIzaSyCrFozUJ6mDfMRvgQGbL9DQm-b5zaosjP0
-

@@ -1,8 +1,0 @@
-
-How to Check the API Response
-In your browser, with the app open, press F12 to open Developer Tools.
-Go to the "Network" tab.
-Submit an idea. You will see a new request appear in the list, likely named ideas. Click on it.
-A new panel will open. Click on the "Response" or "Preview" tab. This shows you the exact JSON data that your frontend received from the backend for the list of ideas.
-Look at the entry for your newest idea. Does it have an ai_enhanced_text field? Is the value an empty string (""), or is the field missing completely?
-
