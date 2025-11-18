@@ -82,9 +82,15 @@ async def read_users_me(current_user: models.User = Depends(security.get_current
 def get_stats(db: Session = Depends(get_db)):
     dept_stats_raw = crud.get_idea_count_by_department(db)
     class_stats_raw = crud.get_idea_count_by_classification(db)
+    category_stats_raw = crud.get_idea_count_by_category(db)
     dept_stats = [{"name": name, "value": value} for name, value in dept_stats_raw]
     class_stats = [{"name": name, "value": value} for name, value in class_stats_raw]
-    return { "ideas_by_department": dept_stats, "ideas_by_classification": class_stats }
+    category_stats = [{"name": name, "value": value} for name, value in category_stats_raw]
+    return {
+        "ideas_by_department": dept_stats,
+        "ideas_by_classification": class_stats,
+        "ideas_by_category": category_stats
+    }
 
 @app.post("/ideas/", response_model=models.IdeaResponse, status_code=201, tags=["Ideas"])
 def create_idea_endpoint(
