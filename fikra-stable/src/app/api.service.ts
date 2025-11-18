@@ -12,7 +12,7 @@ export interface SimilarIdea { id: number; original_text: string; similarity: nu
 export interface IdeaCreate { original_text: string; language: string; }
 export interface CommentCreate { text: string; }
 export interface StatItem { name: string; value: number; }
-export interface StatsResponse { ideas_by_department: StatItem[]; ideas_by_classification: StatItem[]; }
+export interface StatsResponse { ideas_by_department: StatItem[]; ideas_by_classification: StatItem[]; ideas_by_category: StatItem[]; }
 
 @Injectable({
   providedIn: 'root'

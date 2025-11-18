@@ -118,6 +118,7 @@ class StatItem(BaseModel):
 class StatsResponse(BaseModel):
     ideas_by_department: list[StatItem]
     ideas_by_classification: list[StatItem]
+    ideas_by_category: list[StatItem]
 class FindSimilarRequest(BaseModel):
     text: str
 class SimilarIdeaResponse(BaseModel):

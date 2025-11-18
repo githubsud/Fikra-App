@@ -77,6 +77,35 @@ export class StatsDashboardComponent implements OnInit {
   public pieChartType: ChartType = 'pie';
   public pieChartPlugins = [ChartDataLabels];
 
+  // --- Chart #3: Ideas by Category (Doughnut Chart) ---
+  public doughnutChartOptions: ChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top', labels: { color: 'white' } },
+      datalabels: {
+        color: 'white',
+        font: { weight: 'bold', size: 14 },
+        formatter: (value, ctx) => {
+          if (ctx.chart.data.labels) {
+            const total = ctx.chart.data.datasets[0].data.reduce((a, b) => (a as number) + (b as number), 0) as number;
+            if (total === 0) return '0%';
+            return (value / total * 100).toFixed(1) + '%';
+          }
+          return '';
+        },
+      },
+    }
+  };
+  public doughnutChartData: ChartData<'doughnut'> = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#F39C12', '#0047AB', '#8892b0', '#17a2b8', '#28a745', '#dc3545', '#6f42c1', '#f012be', '#20c997'],
+    }]
+  };
+  public doughnutChartType: ChartType = 'doughnut';
+  public doughnutChartPlugins = [ChartDataLabels];
+
 
   constructor(private apiService: ApiService) { }
 
@@ -103,6 +132,15 @@ export class StatsDashboardComponent implements OnInit {
           datasets: [{
             data: stats.ideas_by_classification.map(item => item.value),
             backgroundColor: this.pieChartData.datasets[0].backgroundColor,
+          }]
+        };
+
+        // Re-assign data for Doughnut Chart
+        this.doughnutChartData = {
+          labels: stats.ideas_by_category.map(item => item.name),
+          datasets: [{
+            data: stats.ideas_by_category.map(item => item.value),
+            backgroundColor: this.doughnutChartData.datasets[0].backgroundColor,
           }]
         };
       },

@@ -24,4 +24,14 @@
     </canvas>
   </div>
 
+  <div class="chart-wrapper">
+    <h2 i18n>Ideas by Category</h2>
+    <canvas baseChart class="chart"
+      [data]="doughnutChartData"
+      [options]="doughnutChartOptions"
+      [type]="doughnutChartType"
+      [plugins]="doughnutChartPlugins">
+    </canvas>
+  </div>
+
 </div>

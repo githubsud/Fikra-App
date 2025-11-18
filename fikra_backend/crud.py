@@ -140,3 +140,12 @@ def get_idea_count_by_classification(db: Session):
         .group_by(models.Idea.ai_classification)
         .all()
     )
+
+def get_idea_count_by_category(db: Session):
+    return (
+        db.query(func.json_each.value, func.count(models.Idea.id))
+        .select_from(models.Idea)
+        .join(func.json_each(models.Idea.tags), lambda: True)
+        .group_by(func.json_each.value)
+        .all()
+    )
