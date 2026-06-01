@@ -2,12 +2,16 @@
 import google.generativeai as genai
 import os
 import re
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure the API key securely
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Use a specific model for text generation tasks
-generation_model = genai.GenerativeModel('gemini-1.5-flash')
+generation_model = genai.GenerativeModel('models/gemini-flash-lite-latest')
 
 def get_language_name(code: str) -> str:
     """Converts a language code (e.g., 'ar-QA') to its full name."""
@@ -54,7 +58,7 @@ def enhance_idea(idea_text: str, language: str) -> str:
 def generate_embedding(text: str):
     """Generates an embedding vector for a given piece of text."""
     result = genai.embed_content(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         content=text,
         task_type="RETRIEVAL_DOCUMENT"
     )
